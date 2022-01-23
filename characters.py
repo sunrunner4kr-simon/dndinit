@@ -1,8 +1,7 @@
 
+class Character:
 
-class character:
-
-    def __init__(self, name, initiative, health, enabled):
+    def __init__(self, name: str, initiative: int, health: int, enabled: bool):
         self.name = name
         self.initiative = initiative
         self.health = health

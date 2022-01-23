@@ -1,5 +1,5 @@
-{% extends "base.html" %} {% block title %}Init Tracker{% endblock %} {% block
-content %}
+{% extends "base.html" %} {% block title %}Init Tracker{% endblock %}
+{% block content %}
 <h1>Init Tracker</h1>
 <form action="#" method="post">
     <div class="row row-cols-2">
@@ -20,7 +20,7 @@ content %}
                       type="submit"
                       id="button-addon1"
                       value="{{ character.enabled }}"
-                      name="enable_shanko"
+                      name="enable"
                       onclick="toggle_display()"
                     >
                     {% if character.enabled %}Enabled{% else %}Disabled{% endif %}
@@ -30,18 +30,21 @@ content %}
         </div>
     </div>
 
-    <div class="row row-cols-4">
+    <div class="row row-cols-5">
         <div class="col text-center">
             <button type="submit" class="btn btn-primary btn-lg" name="button" value="add_player">ADD PLAYER</button>
+        </div>
+        <div class="col text-center">
+            <button type="submit" class="btn btn-success btn-lg" name="button" value="sort">SORT CHARACTERS</button>
         </div>
         <div class="col text-center">
             <button type="submit" class="btn btn-success btn-lg" name="button" value="start">START</button>
         </div>
         <div class="col text-center">
-            <button type="button" class="btn btn-primary btn-lg" name="button" value="reset">RESET</button>
+            <button type="submit" class="btn btn-primary btn-lg" name="button" value="reset">RESET</button>
         </div>
         <div class="col text-center">
-            <button type="button" class="btn btn-danger btn-lg" name="button" value="next">NEXT</button>
+            <button type="submit" class="btn btn-danger btn-lg" name="button" value="next">NEXT</button>
         </div>
     </div>
 </form>
