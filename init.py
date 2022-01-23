@@ -1,4 +1,5 @@
-from flask import Flask, redirect, render_template, url_for, request, session
+from flask import Flask, redirect, render_template, url_for, request, session, jsonify
+import json
 
 app = Flask(__name__)
 app.secret_key = "hello"
@@ -40,8 +41,8 @@ class Enabled:
 
 @app.route("/", methods=["POST", "GET"])
 def home():
-    session['players'] = Players.to_json
-    session['enabled'] = Enabled
+    #session['players'] = json.dumps(Players)
+    #session['enabled'] = Enabled
 
     if request.method == "POST":
         if "shanko" in request.form:
