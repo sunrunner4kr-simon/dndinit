@@ -44,11 +44,14 @@ content %}
           value="{{content.saelwyn}}"
         />
         <button
-          class="btn w-25 d-inline-block btn-success"
-          type="button"
+          class="btn w-25 d-inline-block btn-{% if enabled.saelwyn %}success{% else %}danger{% endif %}"
+          type="submit"
           id="button-addon2"
+          value="{{enabled.saelwyn}}"
+          name="enable_saelwyn"
+          onclick="toggle_display()"
         >
-          Enabled
+          {% if enabled.saelwyn %}Enabled{% else %}Disabled{% endif %}
         </button>
       </div>
       <div class="input-group mb-3">
@@ -66,11 +69,14 @@ content %}
           value="{{content.kaelar}}"
         />
         <button
-          class="btn w-25 d-inline-block btn-success"
-          type="button"
+          class="btn w-25 d-inline-block btn-{% if enabled.kaelar %}success{% else %}danger{% endif %}"
+          type="submit"
           id="button-addon3"
+          value="{{enabled.kaelar}}"
+          name="enable_kaelar"
+          onclick="toggle_display()"
         >
-          Enabled
+          {% if enabled.kaelar %}Enabled{% else %}Disabled{% endif %}
         </button>
       </div>
       <div class="input-group mb-3">
@@ -88,11 +94,14 @@ content %}
           value="{{content.owl}}"
         />
         <button
-          class="btn w-25 d-inline-block btn-success"
-          type="button"
+          class="btn w-25 d-inline-block btn-{% if enabled.owl %}success{% else %}danger{% endif %}"
+          type="submit"
           id="button-addon4"
+          value="{{enabled.owl}}"
+          name="enable_owl"
+          onclick="toggle_display()"
         >
-          Enabled
+          {% if enabled.owl %}Enabled{% else %}Disabled{% endif %}
         </button>
       </div>
       <div class="input-group mb-3">
@@ -106,14 +115,18 @@ content %}
           class="form-control"
           placeholder="1-10"
           aria-describedby="basic-addon5"
+          name="tree"
           value="{{content.tree}}"
         />
         <button
-          class="btn w-25 d-inline-block btn-success"
-          type="button"
+          class="btn w-25 d-inline-block btn-{% if enabled.tree %}success{% else %}danger{% endif %}"
+          type="submit"
           id="button-addon5"
+          value="{{enabled.tree}}"
+          name="enable_tree"
+          onclick="toggle_display()"
         >
-          Enabled
+          {% if enabled.tree %}Enabled{% else %}Disabled{% endif %}
         </button>
       </div>
       <div class="input-group mb-3">
@@ -127,14 +140,18 @@ content %}
           class="form-control"
           placeholder="1-10"
           aria-describedby="basic-addon6"
+          name="gith"
           value="{{content.gith}}"
         />
         <button
-          class="btn w-25 d-inline-block btn-success"
-          type="button"
+          class="btn w-25 d-inline-block btn-{% if enabled.gith %}success{% else %}danger{% endif %}"
+          type="submit"
           id="button-addon6"
+          value="{{enabled.gith}}"
+          name="enable_gith"
+          onclick="toggle_display()"
         >
-          Enabled
+          {% if enabled.gith %}Enabled{% else %}Disabled{% endif %}
         </button>
       </div>
       <div class="input-group mb-3">
@@ -148,14 +165,18 @@ content %}
           class="form-control"
           placeholder="1-10"
           aria-describedby="basic-addon7"
+          name="otadus"
           value="{{content.otadus}}"
         />
         <button
-          class="btn w-25 d-inline-block btn-success"
-          type="button"
+          class="btn w-25 d-inline-block btn-{% if enabled.otadus %}success{% else %}danger{% endif %}"
+          type="submit"
           id="button-addon7"
+          value="{{enabled.otadus}}"
+          name="enable_otadus"
+          onclick="toggle_display()"
         >
-          Enabled
+          {% if enabled.otadus %}Enabled{% else %}Disabled{% endif %}
         </button>
       </div>
     </div>
@@ -171,14 +192,18 @@ content %}
           class="form-control"
           placeholder="1-10"
           aria-describedby="basic-addon8"
+          name="mon1"
           value="{{content.mon1}}"
         />
         <button
-          class="btn w-25 d-inline-block btn-success"
-          type="button"
+          class="btn w-25 d-inline-block btn-{% if enabled.mon1 %}success{% else %}danger{% endif %}"
+          type="submit"
           id="button-addon8"
+          value="{{enabled.mon1}}"
+          name="enable_mon1"
+          onclick="toggle_display()"
         >
-          Enabled
+          {% if enabled.mon1 %}Enabled{% else %}Disabled{% endif %}
         </button>
       </div>
       <div class="input-group mb-3">
@@ -192,14 +217,18 @@ content %}
           class="form-control"
           placeholder="1-10"
           aria-describedby="basic-addon9"
+          name="mon2"
           value="{{content.mon2}}"
         />
         <button
-          class="btn w-25 d-inline-block btn-success"
-          type="button"
+          class="btn w-25 d-inline-block btn-{% if enabled.mon2 %}success{% else %}danger{% endif %}"
+          type="submit"
           id="button-addon9"
+          value="{{enabled.mon2}}"
+          name="enable_mon2"
+          onclick="toggle_display()"
         >
-          Enabled
+          {% if enabled.mon2 %}Enabled{% else %}Disabled{% endif %}
         </button>
       </div>
       <div class="input-group mb-3">
@@ -213,14 +242,18 @@ content %}
           class="form-control"
           placeholder="1-10"
           aria-describedby="basic-addon10"
+          name="mon3"
           value="{{content.mon3}}"
         />
         <button
-          class="btn w-25 d-inline-block btn-success"
-          type="button"
+          class="btn w-25 d-inline-block btn-{% if enabled.mon3 %}success{% else %}danger{% endif %}"
+          type="submit"
           id="button-addon10"
+          value="{{enabled.mon3}}"
+          name="enable_mon3"
+          onclick="toggle_display()"
         >
-          Enabled
+          {% if enabled.mon3 %}Enabled{% else %}Disabled{% endif %}
         </button>
       </div>
       <div class="input-group mb-3">
@@ -234,14 +267,18 @@ content %}
           class="form-control"
           placeholder="1-10"
           aria-describedby="basic-addon11"
+          name="mon4"
           value="{{content.mon4}}"
         />
         <button
-          class="btn w-25 d-inline-block btn-success"
-          type="button"
+          class="btn w-25 d-inline-block btn-{% if enabled.mon4 %}success{% else %}danger{% endif %}"
+          type="submit"
           id="button-addon11"
+          value="{{enabled.mon4}}"
+          name="enable_mon4"
+          onclick="toggle_display()"
         >
-          Enabled
+          {% if enabled.mon4 %}Enabled{% else %}Disabled{% endif %}
         </button>
       </div>
       <div class="input-group mb-3">
@@ -255,14 +292,18 @@ content %}
           class="form-control"
           placeholder="1-10"
           aria-describedby="basic-addon12"
+          name="mon5"
           value="{{content.mon5}}"
         />
         <button
-          class="btn w-25 d-inline-block btn-success"
-          type="button"
+          class="btn w-25 d-inline-block btn-{% if enabled.mon5 %}success{% else %}danger{% endif %}"
+          type="submit"
           id="button-addon12"
+          value="{{enabled.mon5}}"
+          name="enable_mon5"
+          onclick="toggle_display()"
         >
-          Enabled
+          {% if enabled.mon5 %}Enabled{% else %}Disabled{% endif %}
         </button>
       </div>
       <div class="input-group mb-3">
@@ -276,14 +317,18 @@ content %}
           class="form-control"
           placeholder="1-10"
           aria-describedby="basic-addon13"
+          name="mon6"
           value="{{content.mon6}}"
         />
         <button
-          class="btn w-25 d-inline-block btn-success"
-          type="button"
+          class="btn w-25 d-inline-block btn-{% if enabled.mon6 %}success{% else %}danger{% endif %}"
+          type="submit"
           id="button-addon13"
+          value="{{enabled.mon6}}"
+          name="enable_mon6"
+          onclick="toggle_display()"
         >
-          Enabled
+          {% if enabled.mon6 %}Enabled{% else %}Disabled{% endif %}
         </button>
       </div>
       <div class="input-group mb-3">
@@ -297,14 +342,18 @@ content %}
           class="form-control"
           placeholder="1-10"
           aria-describedby="basic-addon14"
+          name="mon7"
           value="{{content.mon7}}"
         />
         <button
-          class="btn w-25 d-inline-block btn-success"
-          type="button"
+          class="btn w-25 d-inline-block btn-{% if enabled.mon7 %}success{% else %}danger{% endif %}"
+          type="submit"
           id="button-addon14"
+          value="{{enabled.mon7}}"
+          name="enable_mon7"
+          onclick="toggle_display()"
         >
-          Enabled
+          {% if enabled.mon7 %}Enabled{% else %}Disabled{% endif %}
         </button>
       </div>
     </div>
