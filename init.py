@@ -57,7 +57,15 @@ def home():
             Players.owl = owl
             print("Owl: " + owl)
 
-        return render_template("index.html", content=Players)
+        if "enable_shanko" in request.form:
+            if Enabled.shanko == 0:
+                print("Enabled")
+                Enabled.shanko = 1
+            else:
+                print("Disabled")
+                Enabled.shanko = 0
+
+        return render_template("index.html", content=Players, enabled=Enabled)
     else:
         return render_template("index.html", content="Testing")
 

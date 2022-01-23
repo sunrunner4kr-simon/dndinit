@@ -19,12 +19,14 @@ content %}
           value="{{content.shanko}}"
         />
         <button
-          class="btn btn-success"
+          class="btn w-25 d-inline-block btn-{% if enabled.shanko %}success{% else %}danger{% endif %}"
           type="submit"
           id="button-addon1"
-          value=""
+          value="{{enabled.shanko}}"
+          name="enable_shanko"
+          onclick="toggle_display()"
         >
-          Enabled
+          {% if enabled.shanko %}Enabled{% else %}Disabled{% endif %}
         </button>
       </div>
       <div class="input-group mb-3">
@@ -41,7 +43,11 @@ content %}
           name="saelwyn"
           value="{{content.saelwyn}}"
         />
-        <button class="btn btn-success" type="button" id="button-addon2">
+        <button
+          class="btn w-25 d-inline-block btn-success"
+          type="button"
+          id="button-addon2"
+        >
           Enabled
         </button>
       </div>
@@ -59,7 +65,11 @@ content %}
           name="kaelar"
           value="{{content.kaelar}}"
         />
-        <button class="btn btn-success" type="button" id="button-addon3">
+        <button
+          class="btn w-25 d-inline-block btn-success"
+          type="button"
+          id="button-addon3"
+        >
           Enabled
         </button>
       </div>
@@ -77,7 +87,11 @@ content %}
           name="owl"
           value="{{content.owl}}"
         />
-        <button class="btn btn-success" type="button" id="button-addon4">
+        <button
+          class="btn w-25 d-inline-block btn-success"
+          type="button"
+          id="button-addon4"
+        >
           Enabled
         </button>
       </div>
@@ -94,7 +108,11 @@ content %}
           aria-describedby="basic-addon5"
           value="{{content.tree}}"
         />
-        <button class="btn btn-success" type="button" id="button-addon5">
+        <button
+          class="btn w-25 d-inline-block btn-success"
+          type="button"
+          id="button-addon5"
+        >
           Enabled
         </button>
       </div>
@@ -111,7 +129,11 @@ content %}
           aria-describedby="basic-addon6"
           value="{{content.gith}}"
         />
-        <button class="btn btn-success" type="button" id="button-addon6">
+        <button
+          class="btn w-25 d-inline-block btn-success"
+          type="button"
+          id="button-addon6"
+        >
           Enabled
         </button>
       </div>
@@ -128,7 +150,11 @@ content %}
           aria-describedby="basic-addon7"
           value="{{content.otadus}}"
         />
-        <button class="btn btn-success" type="button" id="button-addon7">
+        <button
+          class="btn w-25 d-inline-block btn-success"
+          type="button"
+          id="button-addon7"
+        >
           Enabled
         </button>
       </div>
@@ -147,7 +173,11 @@ content %}
           aria-describedby="basic-addon8"
           value="{{content.mon1}}"
         />
-        <button class="btn btn-success" type="button" id="button-addon8">
+        <button
+          class="btn w-25 d-inline-block btn-success"
+          type="button"
+          id="button-addon8"
+        >
           Enabled
         </button>
       </div>
@@ -164,7 +194,11 @@ content %}
           aria-describedby="basic-addon9"
           value="{{content.mon2}}"
         />
-        <button class="btn btn-success" type="button" id="button-addon9">
+        <button
+          class="btn w-25 d-inline-block btn-success"
+          type="button"
+          id="button-addon9"
+        >
           Enabled
         </button>
       </div>
@@ -181,7 +215,11 @@ content %}
           aria-describedby="basic-addon10"
           value="{{content.mon3}}"
         />
-        <button class="btn btn-success" type="button" id="button-addon10">
+        <button
+          class="btn w-25 d-inline-block btn-success"
+          type="button"
+          id="button-addon10"
+        >
           Enabled
         </button>
       </div>
@@ -198,7 +236,11 @@ content %}
           aria-describedby="basic-addon11"
           value="{{content.mon4}}"
         />
-        <button class="btn btn-success" type="button" id="button-addon11">
+        <button
+          class="btn w-25 d-inline-block btn-success"
+          type="button"
+          id="button-addon11"
+        >
           Enabled
         </button>
       </div>
@@ -215,7 +257,11 @@ content %}
           aria-describedby="basic-addon12"
           value="{{content.mon5}}"
         />
-        <button class="btn btn-success" type="button" id="button-addon12">
+        <button
+          class="btn w-25 d-inline-block btn-success"
+          type="button"
+          id="button-addon12"
+        >
           Enabled
         </button>
       </div>
@@ -232,7 +278,11 @@ content %}
           aria-describedby="basic-addon13"
           value="{{content.mon6}}"
         />
-        <button class="btn btn-success" type="button" id="button-addon13">
+        <button
+          class="btn w-25 d-inline-block btn-success"
+          type="button"
+          id="button-addon13"
+        >
           Enabled
         </button>
       </div>
@@ -249,7 +299,11 @@ content %}
           aria-describedby="basic-addon14"
           value="{{content.mon7}}"
         />
-        <button class="btn btn-success" type="button" id="button-addon14">
+        <button
+          class="btn w-25 d-inline-block btn-success"
+          type="button"
+          id="button-addon14"
+        >
           Enabled
         </button>
       </div>
@@ -257,13 +311,13 @@ content %}
   </div>
 
   <div class="row row-cols-3">
-    <div class="col">
+    <div class="col text-center">
       <button type="submit" class="btn btn-success btn-lg">START</button>
     </div>
-    <div class="col">
+    <div class="col text-center">
       <button type="button" class="btn btn-primary btn-lg">RESET</button>
     </div>
-    <div class="col">
+    <div class="col text-center">
       <button type="button" class="btn btn-danger btn-lg">NEXT</button>
     </div>
   </div>
