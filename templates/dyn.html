@@ -1,0 +1,48 @@
+{% extends "base.html" %} {% block title %}Init Tracker{% endblock %} {% block
+content %}
+<h1>Init Tracker</h1>
+<form action="#" method="post">
+    <div class="row row-cols-2">
+        <div class="col">
+            {% for character in content %}
+                <div class="input-group mb-3">
+                    <label class="input-group-text w-25 d-inline-block"> {{ character.name }}</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      placeholder="1-10"
+                      aria-describedby="basic-addon1"
+                      name="{{ character.name }}"
+                      value="{{ character.initiative }}"
+                    />
+                    <button
+                      class="btn w-25 d-inline-block btn-{% if character.enabled %}success{% else %}danger{% endif %}"
+                      type="submit"
+                      id="button-addon1"
+                      value="{{ character.enabled }}"
+                      name="enable_shanko"
+                      onclick="toggle_display()"
+                    >
+                    {% if character.enabled %}Enabled{% else %}Disabled{% endif %}
+                    </button>
+                </div>
+            {% endfor %} <!-- for item in players -->
+        </div>
+    </div>
+
+    <div class="row row-cols-4">
+        <div class="col text-center">
+            <button type="submit" class="btn btn-primary btn-lg" name="button" value="add_player">ADD PLAYER</button>
+        </div>
+        <div class="col text-center">
+            <button type="submit" class="btn btn-success btn-lg" name="button" value="start">START</button>
+        </div>
+        <div class="col text-center">
+            <button type="button" class="btn btn-primary btn-lg" name="button" value="reset">RESET</button>
+        </div>
+        <div class="col text-center">
+            <button type="button" class="btn btn-danger btn-lg" name="button" value="next">NEXT</button>
+        </div>
+    </div>
+</form>
+{% endblock %}
