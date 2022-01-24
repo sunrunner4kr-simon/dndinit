@@ -2,11 +2,13 @@ from operator import attrgetter
 
 from flask import Flask, render_template, request, redirect, url_for
 from characters import Character
+from flask_sockets import Sockets
 
 app = Flask(__name__)
 app.secret_key = "hello"
 
-character_names = ["Shanko", "Saelwyn", "Kaelar", "Owly", "Tree", "Gith", "Otadus"]
+character_names = ["Shanko", "Saelwyn",
+                   "Kaelar", "Owly", "Tree", "Gith", "Otadus"]
 players = []
 
 
