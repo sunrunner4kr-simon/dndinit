@@ -27,20 +27,41 @@ class DummyClient(WebSocketClient):
     def received_message(self, m):
         print(m)
 
-# TODO: fix this - should iterate over list from starting point, then start from beginning of list
+
+def getCurrentActivePlayer():
+    if len(players) < 2:
+        return
+    for char in players:
+        if char.is_current:
+            return char
+    # Didn't find one
+    return None
 
 
-def findNextActivePlayer(nextPlayer):
-    for i in [i % len(players) for i in range(nextPlayer)]:
-        print(i)
-#    length = len(players) / len(players[0])
-
- #   for i in range(0, len(players)):
- #      if players[nextPlayer % length].enabled != False:
- #           print(nextPlayer % length)
- #           return nextPlayer % length
-
+def getNextActivePlayer():
+    for char in players:
+        if char.is_next:
+            return char
     return
+
+
+def rotatePlayers():
+    if getCurrentActivePlayer() is None:
+        players[0].is_current = True
+        players[1].is_next = True
+    else:
+        getCurrentActivePlayer().is_current = False
+        next_player = getNextActivePlayer()
+        next_player.is_current = True
+        next_player.is_next = False
+
+        # Get index of new next player
+        index = players.index(next_player)
+        new_next_player_index = 0
+        if index != len(players) - 1:
+            new_next_player_index = index + 1
+
+        players[new_next_player_index].is_next = True
 
 
 def findPlayer(name):
@@ -80,10 +101,11 @@ def dashboard():
                 return redirect(url_for('add_character'))
             elif request.form['button'] == 'sort':
                 updatePlayers(request.form)
-                # players.sort(key=lambda x: x.initiative, reverse=True)
                 players.sort(key=attrgetter('initiative'), reverse=True)
             elif request.form['button'] == 'next':
-                findNextActivePlayer(current_player)
+                rotatePlayers()
+                print("Current: " + getCurrentActivePlayer().name)
+                print("Next: " + getNextActivePlayer().name)
             elif request.form['button'] == 'reset':
                 resetCharacters()
             else:

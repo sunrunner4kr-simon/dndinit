@@ -14,7 +14,7 @@ content %}
         placeholder="1-10"
         aria-describedby="basic-addon1"
         name="{{ character.name }}"
-        value="{{ character.initiative }}"
+        value="{{ character.initiative }}{% if character.is_current %} - CURRENT{% elif character.is_next %} - NEXT{% endif %}"
       />
       <button
         class="btn w-25 d-inline-block btn-{% if character.enabled %}success{% else %}danger{% endif %}"
