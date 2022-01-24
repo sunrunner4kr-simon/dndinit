@@ -12,6 +12,8 @@ character_names = ["Shanko", "Saelwyn",
                    "Kaelar", "Owly", "Tree", "Gith", "Otadus"]
 players = []
 
+current_player = 0
+
 esp8266host = "ws://192.168.1.65:81/"
 
 
@@ -24,6 +26,19 @@ class DummyClient(WebSocketClient):
 
     def received_message(self, m):
         print(m)
+
+# TODO: fix this - should iterate over list from starting point, then start from beginning of list
+
+
+def findNextActivePlayer(nextPlayer):
+    length = len(players) / len(players[0])
+
+    for i in range(0, len(players)):
+        if players[nextPlayer % length].enabled != False:
+            print(nextPlayer % length)
+            return nextPlayer % length
+
+    return 0
 
 
 def findPlayer(name):
@@ -59,7 +74,10 @@ def dashboard():
                 return redirect(url_for('add_character'))
             elif request.form['button'] == 'sort':
                 updatePlayers(request.form)
+                #players.sort(key=lambda x: x.initiative, reverse=True)
                 players.sort(key=attrgetter('initiative'), reverse=True)
+            elif request.form['button'] == 'next':
+                findNextActivePlayer(current_player)
             elif request.form['button'] == 'reset':
                 players.clear()
                 for char in character_names:
