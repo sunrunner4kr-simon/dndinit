@@ -38,7 +38,7 @@ def index():
     # First time only
     players.clear()
     for char in character_names:
-        players.append(Character(char, 20, 20, True))
+        players.append(Character(char, 20, True))
 
     return redirect(url_for('dashboard'))
 
@@ -53,6 +53,8 @@ def dashboard():
                 players.sort(key=attrgetter('initiative'), reverse=True)
             elif request.form['button'] == 'reset':
                 players.clear()
+                for char in character_names:
+                    players.append(Character(char, 20, True))
             else:
                 pass  # unknown
         if 'enable' in request.form:
@@ -71,7 +73,6 @@ def add_character():
         players.append(Character(
             request.form['name-input'],
             int(request.form['initiative-input']),
-            int(request.form['health-input']),
             any_selected
         ))
         return redirect(url_for('dashboard'))

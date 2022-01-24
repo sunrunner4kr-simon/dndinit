@@ -2,37 +2,35 @@
 content %}
 <h1 class="display-3">Init Tracker</h1>
 <form action="#" method="post">
-  <div class="row row-cols-2">
-    <div class="col">
-      {% for character in content %}
-      <div class="input-group mb-3">
-        <label class="input-group-text w-25 d-inline-block">
-          {{ character.name }}</label
-        >
-        <input
-          type="text"
-          class="form-control"
-          placeholder="1-10"
-          aria-describedby="basic-addon1"
-          name="{{ character.name }}"
-          value="{{ character.initiative }}"
-        />
-        <button
-          class="btn w-25 d-inline-block btn-{% if character.enabled %}success{% else %}danger{% endif %}"
-          type="submit"
-          id="button-addon1"
-          value="{{ character.name }}"
-          name="enable"
-        >
-          {% if character.enabled %}Enabled{% else %}Disabled{% endif %}
-        </button>
-      </div>
-      {% endfor %}
-      <!-- for item in players -->
+  <div class="d-flex flex-column flex-wrap" style="height: 500px">
+    {% for character in content %}
+    <div class="input-group mb-3" style="width: 400px">
+      <label class="input-group-text w-25 d-inline-block">
+        {{ character.name }}</label
+      >
+      <input
+        type="text"
+        class="form-control"
+        placeholder="1-10"
+        aria-describedby="basic-addon1"
+        name="{{ character.name }}"
+        value="{{ character.initiative }}"
+      />
+      <button
+        class="btn w-25 d-inline-block btn-{% if character.enabled %}success{% else %}danger{% endif %}"
+        type="submit"
+        id="button-addon1"
+        value="{{ character.name }}"
+        name="enable"
+      >
+        {% if character.enabled %}Enabled{% else %}Disabled{% endif %}
+      </button>
     </div>
+    {% endfor %}
+    <!-- for item in players -->
   </div>
 
-  <div class="row row-cols-5">
+  <div class="row row-cols-4">
     <div class="col text-center">
       <button
         type="submit"
