@@ -1,0 +1,53 @@
+{% extends "base.html" %} {% block title %}Init Tracker{% endblock %}
+{% block content %}
+<h1>Add Character</h1>
+<form action="#" method="post">
+    <div class="input-group mb-3">
+        <label class="input-group-text w-25 d-inline-block">Name:</label>
+        <input
+            type="text"
+            name="name-input"
+            class="form-control"
+            placeholder="Snow"
+            aria-describedby="basic-addon1"
+        >
+    </div>
+    <div class="input-group mb-3">
+        <label class="input-group-text w-25 d-inline-block">Initiative:</label>
+        <input
+            type="number"
+            name="initiative-input"
+            class="form-control"
+            placeholder="10"
+            aria-describedby="basic-addon1"
+        >
+    </div>
+    <div class="input-group mb-3">
+        <label class="input-group-text w-25 d-inline-block">Health:</label>
+        <input
+            type="number"
+            name="health-input"
+            class="form-control"
+            placeholder="50"
+            aria-describedby="basic-addon1"
+        >
+    </div>
+    <div class="input-group mb-3">
+        <label class="input-group-text w-25 d-inline-block">Enabled:</label>
+        <input
+            type="checkbox"
+            name="enabled-input"
+            aria-describedby="basic-addon1"
+            checked
+        >
+    </div>
+    <div class="input-group mb-3">
+        <button
+            type="submit"
+            name="button"
+            value="add_player_submit"
+            class="btn btn-primary btn-lg"
+        > ADD CHARACTER </button>
+    </div>
+</form>
+{% endblock %}
