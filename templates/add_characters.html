@@ -10,6 +10,7 @@ content %}
       class="form-control"
       placeholder="Snow"
       aria-describedby="basic-addon1"
+      autofocus
     />
   </div>
   <div class="input-group mb-3">
@@ -22,16 +23,18 @@ content %}
       aria-describedby="basic-addon1"
     />
   </div>
-  <div class="input-group mb-3">
-    <label class="input-group-text w-25 d-inline-block">Enabled:</label>
+  <div class="form-check">
     <input
+      class="form-check-input"
       type="checkbox"
+      value=""
       name="enabled-input"
-      aria-describedby="basic-addon1"
+      id="flexCheckChecked"
       checked
     />
+    <label class="form-check-label" for="flexCheckChecked">Enabled</label>
   </div>
-  <div class="input-group mb-3">
+  <div class="row p-3">
     <button
       type="submit"
       name="button"

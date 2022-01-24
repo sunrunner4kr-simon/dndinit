@@ -30,7 +30,15 @@ def findPlayer(name):
     for player in players:
         if player.name == name:
             return player
+    print("couldn't find player")
     return
+
+
+def updatePlayers(request):
+    for player in players:
+        if player.name in request:
+            player.initiative = request[player.name]
+            print(player.name + " updated to " + request[player.name])
 
 
 @app.route("/", methods=['GET', 'POST'])
@@ -38,7 +46,7 @@ def index():
     # First time only
     players.clear()
     for char in character_names:
-        players.append(Character(char, 20, True))
+        players.append(Character(char, 10, True))
 
     return redirect(url_for('dashboard'))
 
@@ -50,11 +58,12 @@ def dashboard():
             if request.form['button'] == 'add_player':
                 return redirect(url_for('add_character'))
             elif request.form['button'] == 'sort':
+                updatePlayers(request.form)
                 players.sort(key=attrgetter('initiative'), reverse=True)
             elif request.form['button'] == 'reset':
                 players.clear()
                 for char in character_names:
-                    players.append(Character(char, 20, True))
+                    players.append(Character(char, 10, True))
             else:
                 pass  # unknown
         if 'enable' in request.form:
