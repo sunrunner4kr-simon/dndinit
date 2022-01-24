@@ -37,21 +37,25 @@ def findPlayer(name):
 def updatePlayers(request):
     for player in players:
         if player.name in request:
-            player.initiative = request[player.name]
+            player.initiative = int(request[player.name])
             print(player.name + " updated to " + request[player.name])
+
+
+def resetCharacters():
+    players.clear()
+    for char in character_names:
+        players.append(Character(char, 10, True))
 
 
 @app.route("/", methods=['GET', 'POST'])
 def index():
     # First time only
-    players.clear()
-    for char in character_names:
-        players.append(Character(char, 10, True))
+    resetCharacters()
 
     return redirect(url_for('dashboard'))
 
 
-@ app.route("/dashboard", methods=['GET', 'POST'])
+@app.route("/dashboard", methods=['GET', 'POST'])
 def dashboard():
     if request.method == 'POST':
         if 'button' in request.form:
@@ -61,9 +65,7 @@ def dashboard():
                 updatePlayers(request.form)
                 players.sort(key=attrgetter('initiative'), reverse=True)
             elif request.form['button'] == 'reset':
-                players.clear()
-                for char in character_names:
-                    players.append(Character(char, 10, True))
+                resetCharacters()
             else:
                 pass  # unknown
         if 'enable' in request.form:
@@ -73,7 +75,7 @@ def dashboard():
         return render_template("dyn.html", content=players)
 
 
-@ app.route("/add_character", methods=['GET', 'POST'])
+@app.route("/add_character", methods=['GET', 'POST'])
 def add_character():
     if request.method == 'POST':
         selected = request.form.getlist('enabled-input')

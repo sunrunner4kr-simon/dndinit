@@ -1,1 +1,3 @@
 .venv/pyvenv.cfg
+.venv/Lib/site-packages/*
+__pycache__/*
