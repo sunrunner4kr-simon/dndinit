@@ -17,7 +17,7 @@ content %}
           >
           <input
             type="text"
-            class="form-control {% if character.is_current %}is-valid{% elif character.is_next %}is-invalid{% endif %}"
+            class="form-control {% if character.is_current %}current{% elif character.is_next %}next{% endif %}"
             placeholder="1-10"
             aria-describedby="basic-addon1"
             name="{{ character.name }}"
@@ -66,7 +66,7 @@ content %}
           >
           <input
             type="text"
-            class="form-control"
+            class="form-control {% if character.is_current %}current{% elif character.is_next %}next{% endif %}"
             placeholder="1-10"
             aria-describedby="basic-addon1"
             name="{{ character.name }}"
@@ -97,6 +97,16 @@ content %}
           </button>
         </div>
         {% endif %} {% endfor %}
+        <button
+          type="submit"
+          class="btn btn-primary btn-lg"
+          name="monster"
+          value="add_monster"
+          style="width: 200px; height: 50px"
+        >
+          <i class="bi bi-emoji-angry-fill"></i>
+          ADD MONSTER
+        </button>
         <!-- for item in players -->
       </div>
     </div>
@@ -128,23 +138,23 @@ content %}
     <div class="col text-center">
       <button
         type="submit"
-        class="btn btn-primary btn-lg"
-        name="button"
-        value="reset"
-        style="width: 200px; height: 100px"
-      >
-        RESET
-      </button>
-    </div>
-    <div class="col text-center">
-      <button
-        type="submit"
         class="btn btn-danger btn-lg"
         name="button"
         value="next"
         style="width: 200px; height: 100px"
       >
         NEXT
+      </button>
+    </div>
+    <div class="col text-center">
+      <button
+        type="submit"
+        class="btn btn-primary btn-lg"
+        name="button"
+        value="reset"
+        style="width: 200px; height: 100px"
+      >
+        RESET
       </button>
     </div>
   </div>

@@ -11,6 +11,7 @@ app.secret_key = "hello"
 character_names = ["Shanko", "Saelwyn",
                    "Kaelar", "Owly", "Tree", "Gith", "Otadus"]
 players = []
+monster = 1
 
 esp8266host = "ws://192.168.1.65:81/"
 
@@ -77,6 +78,8 @@ def updatePlayers(request):
 
 
 def resetCharacters():
+    global monster
+    monster = 1
     players.clear()
 
     import json
@@ -128,6 +131,16 @@ def dashboard():
             #remove temp player
             index = players.index(findPlayer(request.form['remove']))
             del players[index]
+        elif 'monster' in request.form:
+            #add generic monster
+            global monster
+            players.append(Character(
+            "Monster " + str(monster),
+            0,
+            True,
+            10,
+            0,0,0,False))
+            monster = monster + 1
         return render_template("dyn.html", content=players)
     elif request.method == 'GET':
         return render_template("dyn.html", content=players)
