@@ -3,10 +3,13 @@ content %}
 <form action="#" method="post">
   <div class="row">
     <div class="col">
-      <div class="d-flex flex-column" style="height: 500px">
+      <div class="d-flex flex-column" style="height: 700px">
         {% for character in content %}{% if character.is_player == True %}
-        <div class="input-group mb-3" style="width: 550px">
-          <label class="input-group-text w-25 d-inline-block text-left">
+        <div class="input-group mb-3" style="width: 600px">
+          <label
+            class="input-group-text w-25 text-left"
+            style="font-size: 1.2em; text-align: left"
+          >
             {% if character.is_player == True %}<i
               class="bi bi-person-circle px-2"
             ></i
@@ -14,7 +17,7 @@ content %}
           >
           <input
             type="text"
-            class="form-control"
+            class="form-control {% if character.is_current %}is-valid{% elif character.is_next %}is-invalid{% endif %}"
             placeholder="1-10"
             aria-describedby="basic-addon1"
             name="{{ character.name }}"
@@ -30,15 +33,15 @@ content %}
           >
             {% if character.enabled %}Enabled{% else %}Disabled{% endif %}
           </button>
-          <button class="btn d-inline-block btn-light">
+          <button class="btn d-inline-block btn-light" style="width: 40px">
             {{ character.ac }}
             <i class="bi bi-shield" style="font-size: 1em; color: black"></i>
           </button>
-          <button class="btn d-inline-block btn-light">
+          <button class="btn d-inline-block btn-light" style="width: 40px">
             {{ character.pass_per }}
             <i class="bi bi-eye" style="font-size: 1rem; color: black"></i>
           </button>
-          <button class="btn d-inline-block btn-light">
+          <button class="btn d-inline-block btn-light" style="width: 40px">
             {{ character.pass_int }}
             <i class="bi bi-search" style="font-size: 1em; color: black"></i>
           </button>
@@ -49,10 +52,13 @@ content %}
     </div>
 
     <div class="col">
-      <div class="d-flex flex-column" style="height: 500px">
+      <div class="d-flex flex-column" style="height: 700px">
         {% for character in content %} {% if character.is_player == False %}
-        <div class="input-group mb-3" style="width: 550px">
-          <label class="input-group-text w-25 d-inline-block text-left">
+        <div class="input-group mb-3" style="width: 600px">
+          <label
+            class="input-group-text w-25 text-left"
+            style="font-size: 1.2em; text-align: left"
+          >
             {% if character.is_player == True %}<i
               class="bi bi-person-circle px-2"
             ></i
@@ -66,25 +72,26 @@ content %}
             name="{{ character.name }}"
             value="{{ character.initiative }}{% if character.is_current %} - CURRENT{% elif character.is_next %} - NEXT{% endif %}"
           />
+
           <button
-            class="btn d-inline-block btn-{% if character.enabled %}success{% else %}danger{% endif %}"
+            class="btn d-inline-block btn-danger"
             type="submit"
             id="button-addon1"
             value="{{ character.name }}"
-            name="enable"
+            name="remove"
             style="width: 100px"
           >
-            {% if character.enabled %}Enabled{% else %}Disabled{% endif %}
+            Remove
           </button>
-          <button class="btn d-inline-block btn-light">
+          <button class="btn d-inline-block btn-light" style="width: 40px">
             {{ character.ac }}
             <i class="bi bi-shield" style="font-size: 1em; color: black"></i>
           </button>
-          <button class="btn d-inline-block btn-light">
+          <button class="btn d-inline-block btn-light" style="width: 40px">
             {{ character.pass_per }}
             <i class="bi bi-eye" style="font-size: 1rem; color: black"></i>
           </button>
-          <button class="btn d-inline-block btn-light">
+          <button class="btn d-inline-block btn-light" style="width: 40px">
             {{ character.pass_int }}
             <i class="bi bi-search" style="font-size: 1em; color: black"></i>
           </button>
@@ -102,6 +109,7 @@ content %}
         class="btn btn-primary btn-lg"
         name="button"
         value="add_player"
+        style="width: 200px; height: 100px"
       >
         ADD PLAYER
       </button>
@@ -112,6 +120,7 @@ content %}
         class="btn btn-success btn-lg"
         name="button"
         value="sort"
+        style="width: 200px; height: 100px"
       >
         SORT CHARACTERS
       </button>
@@ -122,6 +131,7 @@ content %}
         class="btn btn-primary btn-lg"
         name="button"
         value="reset"
+        style="width: 200px; height: 100px"
       >
         RESET
       </button>
@@ -132,6 +142,7 @@ content %}
         class="btn btn-danger btn-lg"
         name="button"
         value="next"
+        style="width: 200px; height: 100px"
       >
         NEXT
       </button>

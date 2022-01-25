@@ -78,9 +78,24 @@ def updatePlayers(request):
 
 def resetCharacters():
     players.clear()
-    for char in character_names:
-        #TODO: Get player data from JSON
-        players.append(Character(char, 10, True, 0, 0, 0, 0, True))
+
+    import json
+ 
+    # Opening JSON file
+    f = open('data.json')
+    
+    # returns JSON object as
+    # a dictionary
+    data = json.load(f)
+    
+    # Iterating through the json
+    # list
+    for i in data['players']:
+        print(i)
+        players.append(Character(i['name'], 10, True, i['dexterity'], i['ac'], i['pass_int'], i['pass_per'], True))
+    print(players)
+    # Closing file
+    f.close()
 
 
 @app.route("/", methods=['GET', 'POST'])
@@ -109,6 +124,10 @@ def dashboard():
                 pass  # unknown
         if 'enable' in request.form:
             Character.toggle_enabled(findPlayer(request.form['enable']))
+        elif 'remove' in request.form:
+            #remove temp player
+            index = players.index(findPlayer(request.form['remove']))
+            del players[index]
         return render_template("dyn.html", content=players)
     elif request.method == 'GET':
         return render_template("dyn.html", content=players)
