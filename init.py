@@ -80,7 +80,7 @@ def resetCharacters():
     players.clear()
     for char in character_names:
         #TODO: Get player data from JSON
-        players.append(Character(char, 10, True, 0, 0, 0, 0))
+        players.append(Character(char, 10, True, 0, 0, 0, 0, True))
 
 
 @app.route("/", methods=['GET', 'POST'])
@@ -125,7 +125,7 @@ def add_character():
             int(request.form['initiative-input']),
             any_selected,
             int(request.form['dexterity-input']),
-            0,0,0
+            0,0,0,False
 
             #TODO: need way to enter additional char data - if required
             #TODO: Checkbox on screen to determine if prompt for additonal data

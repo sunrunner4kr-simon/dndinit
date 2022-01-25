@@ -1,46 +1,98 @@
 {% extends "base.html" %} {% block title %}Init Tracker{% endblock %} {% block
 content %}
-<h1 class="display-3">Init Tracker</h1>
 <form action="#" method="post">
-  <div class="d-flex flex-column flex-wrap" style="height: 500px">
-    {% for character in content %}
-    <div class="input-group mb-3" style="width: 550px">
-      <label class="input-group-text w-25 d-inline-block">
-        {{ character.name }}</label
-      >
-      <input
-        type="text"
-        class="form-control"
-        placeholder="1-10"
-        aria-describedby="basic-addon1"
-        name="{{ character.name }}"
-        value="{{ character.initiative }}{% if character.is_current %} - CURRENT{% elif character.is_next %} - NEXT{% endif %}"
-      />
-      <button
-        class="btn d-inline-block btn-{% if character.enabled %}success{% else %}danger{% endif %}"
-        type="submit"
-        id="button-addon1"
-        value="{{ character.name }}"
-        name="enable"
-        style="width: 100px"
-      >
-        {% if character.enabled %}Enabled{% else %}Disabled{% endif %}
-      </button>
-      <button class="btn d-inline-block btn-light">
-        {{ character.ac }}
-        <i class="bi bi-shield" style="font-size: 1em; color: black"></i>
-      </button>
-      <button class="btn d-inline-block btn-light">
-        {{ character.pass_per }}
-        <i class="bi bi-eye" style="font-size: 1rem; color: black"></i>
-      </button>
-      <button class="btn d-inline-block btn-light">
-        {{ character.pass_int }}
-        <i class="bi bi-search" style="font-size: 1em; color: black"></i>
-      </button>
+  <div class="row">
+    <div class="col">
+      <div class="d-flex flex-column" style="height: 500px">
+        {% for character in content %}{% if character.is_player == True %}
+        <div class="input-group mb-3" style="width: 550px">
+          <label class="input-group-text w-25 d-inline-block text-left">
+            {% if character.is_player == True %}<i
+              class="bi bi-person-circle px-2"
+            ></i
+            >{% else %}{% endif %}{{ character.name }}</label
+          >
+          <input
+            type="text"
+            class="form-control"
+            placeholder="1-10"
+            aria-describedby="basic-addon1"
+            name="{{ character.name }}"
+            value="{{ character.initiative }}{% if character.is_current %} - CURRENT{% elif character.is_next %} - NEXT{% endif %}"
+          />
+          <button
+            class="btn d-inline-block btn-{% if character.enabled %}success{% else %}danger{% endif %}"
+            type="submit"
+            id="button-addon1"
+            value="{{ character.name }}"
+            name="enable"
+            style="width: 100px"
+          >
+            {% if character.enabled %}Enabled{% else %}Disabled{% endif %}
+          </button>
+          <button class="btn d-inline-block btn-light">
+            {{ character.ac }}
+            <i class="bi bi-shield" style="font-size: 1em; color: black"></i>
+          </button>
+          <button class="btn d-inline-block btn-light">
+            {{ character.pass_per }}
+            <i class="bi bi-eye" style="font-size: 1rem; color: black"></i>
+          </button>
+          <button class="btn d-inline-block btn-light">
+            {{ character.pass_int }}
+            <i class="bi bi-search" style="font-size: 1em; color: black"></i>
+          </button>
+        </div>
+        {% endif %} {% endfor %}
+        <!-- for item in players -->
+      </div>
     </div>
-    {% endfor %}
-    <!-- for item in players -->
+
+    <div class="col">
+      <div class="d-flex flex-column" style="height: 500px">
+        {% for character in content %} {% if character.is_player == False %}
+        <div class="input-group mb-3" style="width: 550px">
+          <label class="input-group-text w-25 d-inline-block text-left">
+            {% if character.is_player == True %}<i
+              class="bi bi-person-circle px-2"
+            ></i
+            >{% else %}{% endif %}{{ character.name }}</label
+          >
+          <input
+            type="text"
+            class="form-control"
+            placeholder="1-10"
+            aria-describedby="basic-addon1"
+            name="{{ character.name }}"
+            value="{{ character.initiative }}{% if character.is_current %} - CURRENT{% elif character.is_next %} - NEXT{% endif %}"
+          />
+          <button
+            class="btn d-inline-block btn-{% if character.enabled %}success{% else %}danger{% endif %}"
+            type="submit"
+            id="button-addon1"
+            value="{{ character.name }}"
+            name="enable"
+            style="width: 100px"
+          >
+            {% if character.enabled %}Enabled{% else %}Disabled{% endif %}
+          </button>
+          <button class="btn d-inline-block btn-light">
+            {{ character.ac }}
+            <i class="bi bi-shield" style="font-size: 1em; color: black"></i>
+          </button>
+          <button class="btn d-inline-block btn-light">
+            {{ character.pass_per }}
+            <i class="bi bi-eye" style="font-size: 1rem; color: black"></i>
+          </button>
+          <button class="btn d-inline-block btn-light">
+            {{ character.pass_int }}
+            <i class="bi bi-search" style="font-size: 1em; color: black"></i>
+          </button>
+        </div>
+        {% endif %} {% endfor %}
+        <!-- for item in players -->
+      </div>
+    </div>
   </div>
 
   <div class="row row-cols-4 p-3">
@@ -85,5 +137,6 @@ content %}
       </button>
     </div>
   </div>
+
+  {% endblock %}
 </form>
-{% endblock %}
