@@ -1,7 +1,7 @@
 from operator import attrgetter
 from socket import socket
 
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, flash
 from characters import Character
 from ws4py.client.threadedclient import WebSocketClient
 
@@ -12,6 +12,7 @@ character_names = ["Shanko", "Saelwyn",
                    "Kaelar", "Owly", "Tree", "Gith", "Otadus"]
 players = []
 monster = 1
+sequence_started = False
 
 esp8266host = "ws://192.168.1.65:81/"
 
@@ -44,23 +45,41 @@ def getNextActivePlayer():
     return
 
 
+def findNextEnabledPlayer(start_index):
+    if start_index >= len(players):
+        start_index = 0
+    for i in range(start_index, len(players) - 1):
+        if players[i].enabled and not players[i].is_current and not players[i].is_next:
+            return players[i]
+
+    for i in range(0, start_index):
+        if players[i].enabled and not players[i].is_current and not players[i].is_next:
+            return players[i]
+
+
 def rotatePlayers():
+    enabled_player_count = 0
+    for player in players:
+        if player.enabled:
+            enabled_player_count = enabled_player_count + 1
+
+    if enabled_player_count < 3:
+        flash("Not enough enabled players!")
+        return
+
     if getCurrentActivePlayer() is None:
-        players[0].is_current = True
-        players[1].is_next = True
+        findNextEnabledPlayer(0).is_current = True
+        findNextEnabledPlayer(0).is_next = True
+
     else:
+        # Current player is no longer current, moved to what was previously next player
         getCurrentActivePlayer().is_current = False
         next_player = getNextActivePlayer()
         next_player.is_current = True
         next_player.is_next = False
 
-        # Get index of new next player
-        index = players.index(next_player)
-        new_next_player_index = 0
-        if index != len(players) - 1:
-            new_next_player_index = index + 1
-
-        players[new_next_player_index].is_next = True
+        # New next player found here
+        findNextEnabledPlayer(players.index(next_player)).is_next = True
 
 
 def findPlayer(name):
@@ -71,11 +90,18 @@ def findPlayer(name):
     return
 
 
-def updatePlayers(request):
+def updatePlayers(update_request):
+    if sequence_started:
+        flash("Cannot sort once sequence has started!")
+        return
+
     for player in players:
-        if player.name in request:
-            player.initiative = int(request[player.name])
-            print(player.name + " updated to " + request[player.name])
+        if player.name in update_request:
+            if not update_request[player.name]:
+                flash("Must set all initiatives first!")
+                return
+            player.initiative = int(update_request[player.name])
+            print(player.name + " updated to " + update_request[player.name])
 
 
 def resetCharacters():
@@ -97,10 +123,21 @@ def resetCharacters():
     for i in data['players']:
         print(i)
         players.append(Character(
-            i['name'], 10, True, i['dexterity'], i['ac'], i['pass_int'], i['pass_per'], True))
+            str(i['name']),
+            int(10),
+            True,
+            int(i['dexterity']),
+            int(i['ac']),
+            int(i['pass_int']),
+            int(i['pass_per']),
+            True))
     print(players)
     # Closing file
     f.close()
+
+
+def sortPlayers():
+    players.sort(key=lambda player: (-player.initiative, -player.dexterity, player.name))
 
 
 @app.route("/", methods=['GET', 'POST'])
@@ -112,29 +149,31 @@ def index():
 
 @app.route("/dashboard", methods=['GET', 'POST'])
 def dashboard():
+    global sequence_started
     if request.method == 'POST':
         if 'button' in request.form:
             if request.form['button'] == 'add_player':
                 return redirect(url_for('add_character'))
             elif request.form['button'] == 'sort':
                 updatePlayers(request.form)
-                players.sort(key=attrgetter(
-                    'initiative', 'dexterity'), reverse=True)
+                sortPlayers()
             elif request.form['button'] == 'next':
+                sequence_started = True
                 rotatePlayers()
-                print("Current: " + getCurrentActivePlayer().name)
-                print("Next: " + getNextActivePlayer().name)
             elif request.form['button'] == 'reset':
+                sequence_started = False
                 resetCharacters()
             else:
                 pass  # unknown
         if 'enable' in request.form:
             Character.toggle_enabled(findPlayer(request.form['enable']))
         elif 'remove' in request.form:
+            updatePlayers(request.form)
             # remove temp player
             index = players.index(findPlayer(request.form['remove']))
             del players[index]
         elif 'monster' in request.form:
+            updatePlayers(request.form)
             # add generic monster
             global monster
             players.append(Character(
@@ -164,10 +203,10 @@ def add_character():
             any_selected,
             int(request.form['dexterity-input']),
             0, 0, 0, False
-
-            # TODO: need way to enter additional char data - if required
-            # TODO: Checkbox on screen to determine if prompt for additonal data
         ))
+
+        sortPlayers()
+
         return redirect(url_for('dashboard'))
     elif request.method == 'GET':
         return render_template("add_characters.html")

@@ -1,7 +1,16 @@
 
 class Character:
 
-    def __init__(self, name: str, initiative: int, enabled: bool, dexterity: int, ac: int, pass_int: int, pass_per: int, is_player: bool):
+    def __init__(self,
+                 name: str,
+                 initiative: int,
+                 enabled: bool,
+                 dexterity: int,
+                 ac: int,
+                 pass_int: int,
+                 pass_per: int,
+                 is_player: bool
+                 ):
         self.name = name
         self.initiative = initiative
         self.enabled = enabled

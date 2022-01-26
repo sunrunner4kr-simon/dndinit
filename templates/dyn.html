@@ -1,5 +1,12 @@
-{% extends "base.html" %} {% block title %}Init Tracker{% endblock %} {% block
-content %}
+{% extends "base.html" %} {% block title %}Init Tracker{% endblock %}
+{% block content %}
+{% with messages = get_flashed_messages() %}
+   {% if messages %}
+      {% for message in messages %}
+         {{ message }}
+      {% endfor %}
+   {% endif %}
+{% endwith %}
 <form action="#" method="post">
   <div class="row mh-80 h-80">
     <div class="col">
@@ -22,6 +29,7 @@ content %}
             aria-describedby="basic-addon1"
             name="{{ character.name }}"
             value="{{ character.initiative }}{% if character.is_current %} - CURRENT{% elif character.is_next %} - NEXT{% endif %}"
+            onfocus="this.value=''"
           />
           <button
             class="btn d-inline-block btn-{% if character.enabled %}success{% else %}danger{% endif %}"
@@ -79,6 +87,7 @@ content %}
             aria-describedby="basic-addon1"
             name="{{ character.name }}"
             value="{{ character.initiative }}{% if character.is_current %} - CURRENT{% elif character.is_next %} - NEXT{% endif %}"
+            onfocus="this.value=''"
           />
 
           <button
