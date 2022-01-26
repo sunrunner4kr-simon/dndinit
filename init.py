@@ -116,7 +116,7 @@ def dashboard():
                 return redirect(url_for('add_character'))
             elif request.form['button'] == 'sort':
                 updatePlayers(request.form)
-                players.sort(key=attrgetter('initiative'), reverse=True)
+                players.sort(key=attrgetter('initiative', 'dexterity'), reverse=True)
             elif request.form['button'] == 'next':
                 rotatePlayers()
                 print("Current: " + getCurrentActivePlayer().name)
@@ -149,6 +149,9 @@ def dashboard():
 @app.route("/add_character", methods=['GET', 'POST'])
 def add_character():
     if request.method == 'POST':
+        if 'back' in request.form:
+            return redirect(url_for('dashboard'))
+            
         selected = request.form.getlist('enabled-input')
         any_selected = bool(selected)
 
