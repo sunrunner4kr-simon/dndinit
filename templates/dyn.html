@@ -41,13 +41,18 @@ content %}
             ></i>
           </button>
           <button class="btn d-inline-block btn-light" style="width: 40px">
-            {{ character.pass_per }}
+            {{ character.pass_per }} {% if character.pass_per|int > 12 %}
+            <i class="fas fa-eye" style="font-size: 1rem; color: red"></i>
+            {% else %}
             <i class="fas fa-eye" style="font-size: 1rem; color: black"></i>
+            {% endif %}
           </button>
           <button class="btn d-inline-block btn-light" style="width: 40px">
-            {{ character.pass_int }}
-            <i class="fas fa-search" style="font-size: 1em; color: black"></i>
-          </button>
+            {{ character.pass_int }} {% if character.pass_int|int > 12 %}
+            <i class="fas fa-search" style="font-size: 1em; color: red"></i>
+            {% else %}
+            <i class="fas fa-search" style="font-size: 1rem; color: black"></i>
+            {% endif %}
         </div>
         {% endif %} {% endfor %}
         <!-- for item in players -->

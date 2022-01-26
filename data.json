@@ -9,7 +9,7 @@
   {
     "name": "Saelwyn",
     "dexterity":"16",
-    "ac":"17",
+    "ac":"15",
     "pass_int":"11",
     "pass_per":"17"
   },
@@ -47,5 +47,12 @@
     "ac":"18",
     "pass_int":"10",
     "pass_per":"11"
+  },
+  {
+    "name": "Hannah",
+    "dexterity":"16",
+    "ac":"17",
+    "pass_int":"16",
+    "pass_per":"12"
   }
 ]}
