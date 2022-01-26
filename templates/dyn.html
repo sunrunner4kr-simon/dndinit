@@ -11,7 +11,7 @@ content %}
             style="font-size: 1.2em; text-align: left"
           >
             {% if character.is_player == True %}<i
-              class="bi bi-person-circle px-2"
+              class="fas fa-dice-d20 p-2"
             ></i
             >{% else %}{% endif %}{{ character.name }}</label
           >
@@ -35,15 +35,18 @@ content %}
           </button>
           <button class="btn d-inline-block btn-light" style="width: 40px">
             {{ character.ac }}
-            <i class="bi bi-shield" style="font-size: 1em; color: black"></i>
+            <i
+              class="fas fa-shield-alt"
+              style="font-size: 1em; color: black"
+            ></i>
           </button>
           <button class="btn d-inline-block btn-light" style="width: 40px">
             {{ character.pass_per }}
-            <i class="bi bi-eye" style="font-size: 1rem; color: black"></i>
+            <i class="fas fa-eye" style="font-size: 1rem; color: black"></i>
           </button>
           <button class="btn d-inline-block btn-light" style="width: 40px">
             {{ character.pass_int }}
-            <i class="bi bi-search" style="font-size: 1em; color: black"></i>
+            <i class="fas fa-search" style="font-size: 1em; color: black"></i>
           </button>
         </div>
         {% endif %} {% endfor %}
@@ -85,15 +88,18 @@ content %}
           </button>
           <button class="btn d-inline-block btn-light" style="width: 40px">
             {{ character.ac }}
-            <i class="bi bi-shield" style="font-size: 1em; color: black"></i>
+            <i
+              class="fas fa-shield-alt"
+              style="font-size: 1em; color: black"
+            ></i>
           </button>
           <button class="btn d-inline-block btn-light" style="width: 40px">
             {{ character.pass_per }}
-            <i class="bi bi-eye" style="font-size: 1rem; color: black"></i>
+            <i class="fas fa-eye" style="font-size: 1rem; color: black"></i>
           </button>
           <button class="btn d-inline-block btn-light" style="width: 40px">
             {{ character.pass_int }}
-            <i class="bi bi-search" style="font-size: 1em; color: black"></i>
+            <i class="fas fa-search" style="font-size: 1em; color: black"></i>
           </button>
         </div>
         {% endif %} {% endfor %}
@@ -104,7 +110,7 @@ content %}
           value="add_monster"
           style="width: 200px; height: 50px"
         >
-          <i class="bi bi-emoji-angry-fill"></i>
+          <i class="fas fa-skull"></i>
           ADD MONSTER
         </button>
         <!-- for item in players -->

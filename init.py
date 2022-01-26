@@ -15,6 +15,7 @@ monster = 1
 
 esp8266host = "ws://192.168.1.65:81/"
 
+
 class DummyClient(WebSocketClient):
     def opened(self):
         print("Websocket open")
@@ -83,19 +84,20 @@ def resetCharacters():
     players.clear()
 
     import json
- 
+
     # Opening JSON file
     f = open('data.json')
-    
+
     # returns JSON object as
     # a dictionary
     data = json.load(f)
-    
+
     # Iterating through the json
     # list
     for i in data['players']:
         print(i)
-        players.append(Character(i['name'], 10, True, i['dexterity'], i['ac'], i['pass_int'], i['pass_per'], True))
+        players.append(Character(
+            i['name'], 10, True, i['dexterity'], i['ac'], i['pass_int'], i['pass_per'], True))
     print(players)
     # Closing file
     f.close()
@@ -116,7 +118,8 @@ def dashboard():
                 return redirect(url_for('add_character'))
             elif request.form['button'] == 'sort':
                 updatePlayers(request.form)
-                players.sort(key=attrgetter('initiative', 'dexterity'), reverse=True)
+                players.sort(key=attrgetter(
+                    'initiative', 'dexterity'), reverse=True)
             elif request.form['button'] == 'next':
                 rotatePlayers()
                 print("Current: " + getCurrentActivePlayer().name)
@@ -128,18 +131,18 @@ def dashboard():
         if 'enable' in request.form:
             Character.toggle_enabled(findPlayer(request.form['enable']))
         elif 'remove' in request.form:
-            #remove temp player
+            # remove temp player
             index = players.index(findPlayer(request.form['remove']))
             del players[index]
         elif 'monster' in request.form:
-            #add generic monster
+            # add generic monster
             global monster
             players.append(Character(
-            "Monster " + str(monster),
-            0,
-            True,
-            10,
-            0,0,0,False))
+                "Monster " + str(monster),
+                0,
+                True,
+                10,
+                0, 0, 0, False))
             monster = monster + 1
         return render_template("dyn.html", content=players)
     elif request.method == 'GET':
@@ -151,7 +154,7 @@ def add_character():
     if request.method == 'POST':
         if 'back' in request.form:
             return redirect(url_for('dashboard'))
-            
+
         selected = request.form.getlist('enabled-input')
         any_selected = bool(selected)
 
@@ -160,10 +163,10 @@ def add_character():
             int(request.form['initiative-input']),
             any_selected,
             int(request.form['dexterity-input']),
-            0,0,0,False
+            0, 0, 0, False
 
-            #TODO: need way to enter additional char data - if required
-            #TODO: Checkbox on screen to determine if prompt for additonal data
+            # TODO: need way to enter additional char data - if required
+            # TODO: Checkbox on screen to determine if prompt for additonal data
         ))
         return redirect(url_for('dashboard'))
     elif request.method == 'GET':
