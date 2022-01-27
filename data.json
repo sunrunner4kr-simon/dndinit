@@ -54,5 +54,12 @@
     "ac":"17",
     "pass_int":"16",
     "pass_per":"12"
+  },
+  {
+    "name": "Hannah",
+    "dexterity":"16",
+    "ac":"17",
+    "pass_int":"16",
+    "pass_per":"12"
   }
 ]}

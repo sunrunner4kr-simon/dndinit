@@ -3,7 +3,6 @@ from socket import socket
 
 from flask import Flask, render_template, request, redirect, url_for, flash
 from characters import Character
-from ws4py.client.threadedclient import WebSocketClient
 
 app = Flask(__name__)
 app.secret_key = "hello"
@@ -12,20 +11,10 @@ character_names = ["Shanko", "Saelwyn",
                    "Kaelar", "Owly", "Tree", "Gith", "Otadus"]
 players = []
 monster = 1
+npc = 1
 sequence_started = False
 
-esp8266host = "ws://192.168.1.65:81/"
-
-
-class DummyClient(WebSocketClient):
-    def opened(self):
-        print("Websocket open")
-
-    def closed(self, code, reason=None):
-        print("Connection closed down", code, reason)
-
-    def received_message(self, m):
-        print(m)
+add = ""
 
 
 def getCurrentActivePlayer():
@@ -102,11 +91,19 @@ def updatePlayers(update_request):
                 return
             player.initiative = int(update_request[player.name])
             print(player.name + " updated to " + update_request[player.name])
+        if "DEX" + player.name in update_request:
+            player.dexterity = int(update_request["DEX"+player.name])
+            print(player.name + " dex updated to " +
+                  update_request["DEX"+player.name])
 
 
 def resetCharacters():
     global monster
     monster = 1
+    global npc
+    npc = 1
+    global add
+    add = ""
     players.clear()
 
     import json
@@ -130,14 +127,27 @@ def resetCharacters():
             int(i['ac']),
             int(i['pass_int']),
             int(i['pass_per']),
-            True))
+            True, False))
     print(players)
     # Closing file
     f.close()
 
 
 def sortPlayers():
-    players.sort(key=lambda player: (-player.initiative, -player.dexterity, player.name))
+    players.sort(key=lambda player: (-player.initiative, -
+                 player.dexterity, player.name))
+
+
+def checkDex(dex_request):
+    list = players
+    for player in players:
+        if "DEX" + player.name in dex_request and player.dexterity == 0:
+
+            for item in list:
+                if item.initiative == player.initiative and item.name is not player.name:
+
+                    return player.name
+    return None
 
 
 @app.route("/", methods=['GET', 'POST'])
@@ -155,8 +165,12 @@ def dashboard():
             if request.form['button'] == 'add_player':
                 return redirect(url_for('add_character'))
             elif request.form['button'] == 'sort':
+                # TODO: if a non-player is returned with a matching init, we return render with error for that player
+                # TODO: call function to check for matching inits where we have no dex value
                 updatePlayers(request.form)
-                sortPlayers()
+                if checkDex(request.form) is None:
+                    sortPlayers()
+
             elif request.form['button'] == 'next':
                 sequence_started = True
                 rotatePlayers()
@@ -178,14 +192,29 @@ def dashboard():
             global monster
             players.append(Character(
                 "Monster " + str(monster),
-                0,
-                True,
                 10,
-                0, 0, 0, False))
+                True,
+                0,
+                0, 0, 0, False, True))
             monster = monster + 1
-        return render_template("dyn.html", content=players)
+        elif 'npc' in request.form:
+            updatePlayers(request.form)
+            # add generic monster
+            global npc
+            players.append(Character(
+                "NPC " + str(npc),
+                10,
+                True,
+                0,
+                0, 0, 0, False, False))
+            npc = npc + 1
+        count = len([elem for elem in players if elem.is_player == False])
+        global add
+        if count == 8:
+            add = "disabled"
+        return render_template("dyn.html", content=players, add=add, dex=checkDex(request.form))
     elif request.method == 'GET':
-        return render_template("dyn.html", content=players)
+        return render_template("dyn.html", content=players, add=add)
 
 
 @app.route("/add_character", methods=['GET', 'POST'])
@@ -193,16 +222,14 @@ def add_character():
     if request.method == 'POST':
         if 'back' in request.form:
             return redirect(url_for('dashboard'))
-
-        selected = request.form.getlist('enabled-input')
-        any_selected = bool(selected)
+        print(request.form)
 
         players.append(Character(
             request.form['name-input'],
             int(request.form['initiative-input']),
-            any_selected,
+            True,
             int(request.form['dexterity-input']),
-            0, 0, 0, False
+            0, 0, 0, False, False
         ))
 
         sortPlayers()

@@ -1,12 +1,5 @@
 {% extends "base.html" %} {% block title %}Init Tracker{% endblock %}
 {% block content %}
-{% with messages = get_flashed_messages() %}
-   {% if messages %}
-      {% for message in messages %}
-         {{ message }}
-      {% endfor %}
-   {% endif %}
-{% endwith %}
 <form action="#" method="post">
   <div class="row mh-80 h-80">
     <div class="col">
@@ -75,10 +68,7 @@
             class="input-group-text w-25 text-left"
             style="font-size: 1.2em; text-align: left"
           >
-            {% if character.is_player == True %}<i
-              class="bi bi-person-circle px-2"
-            ></i
-            >{% else %}{% endif %}{{ character.name }}</label
+            {% if character.is_monster == True %}<i class="fas fa-skull p-2" Style="color:red"></i>{% else %}<i class="fas fa-user p-2"></i>{% endif %}{{ character.name }}</label
           >
           <input
             type="text"
@@ -100,44 +90,65 @@
           >
             Remove
           </button>
-          <button class="btn d-inline-block btn-light" style="width: 40px">
-            {{ character.ac }}
-            <i
-              class="fas fa-shield-alt"
-              style="font-size: 1em; color: black"
-            ></i>
-          </button>
-          <button class="btn d-inline-block btn-light" style="width: 40px">
-            {{ character.pass_per }}
-            <i class="fas fa-eye" style="font-size: 1rem; color: black"></i>
-          </button>
-          <button class="btn d-inline-block btn-light" style="width: 40px">
-            {{ character.pass_int }}
-            <i class="fas fa-search" style="font-size: 1em; color: black"></i>
-          </button>
+          <input
+            type="text"
+            class="form-control ms-2 {% if dex == character.name %}dex_miss{% endif %}"
+            placeholder="DEX"
+            aria-describedby="basic-addon1"
+            name="DEX{{ character.name }}"
+            value="{{ character.dexterity }}"
+            onfocus="this.value=''"
+          />
         </div>
         {% endif %} {% endfor %}
+        <div class="row row-cols-2 gx-4">
+            <div class="col">
         <button
           type="submit"
-          class="btn btn-monster btn-lg"
+          class="btn btn-monster btn-lg w-100 {{ add }}"
           name="monster"
           value="add_monster"
+          {{ add }}
         >
           <i class="fas fa-skull"></i>
           ADD MONSTER
-        </button>
+        </button></div>
+        <div class="col">
+        <button
+          type="submit"
+          class="btn btn-npc btn-lg w-100 {{ add }}"
+          name="npc"
+          value="add_npc"
+          {{ add }}
+        >
+          <i class="fas fa-user"></i>
+          ADD NPC
+        </button></div></div>
         <!-- for item in players -->
       </div>
     </div>
   </div>
 
+  <div class="row">
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+      <div class="alert alert-danger" role="alert">
+        {% for message in messages %}
+            {{ message }}  
+        {% endfor %}
+      </div>
+      {% endif %} 
+    {% endwith %}
+  </div>
   <div class="row row-cols-4 p-3 mh-15 h-15" >
+    
     <div class="col text-center px-4">
       <button
         type="submit"
-        class="btn btn-custom btn-lg w-100"
+        class="btn btn-custom btn-lg w-100 {{ add }}"
         name="button"
         value="add_player"
+        {{ add }}
       ><i class="fas fa-plus"></i>
         ADD PLAYER
       </button>
@@ -173,6 +184,5 @@
       </button>
     </div>
   </div>
-
   {% endblock %}
 </form>
