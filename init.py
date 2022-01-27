@@ -1,8 +1,23 @@
+import time
+
 from operator import attrgetter
 from socket import socket
+from rpi_ws281x import Color, PixelStrip, ws
 
 from flask import Flask, render_template, request, redirect, url_for, flash
 from characters import Character
+from seats import Seat
+
+# LED strip configuration:
+LED_COUNT = 91         # Number of LED pixels.
+LED_PIN = 18           # GPIO pin connected to the pixels (must support PWM!).
+LED_FREQ_HZ = 800000   # LED signal frequency in hertz (usually 800khz)
+LED_DMA = 10           # DMA channel to use for generating signal (try 10)
+LED_BRIGHTNESS = 255   # Set to 0 for darkest and 255 for brightest
+# True to invert the signal (when using NPN transistor level shift)
+LED_INVERT = False
+LED_CHANNEL = 0
+LED_STRIP = ws.SK6812_STRIP_RGBW
 
 app = Flask(__name__)
 app.secret_key = "hello"
@@ -10,11 +25,72 @@ app.secret_key = "hello"
 character_names = ["Shanko", "Saelwyn",
                    "Kaelar", "Owly", "Tree", "Gith", "Otadus"]
 players = []
+playerSeats = []
 monster = 1
 npc = 1
 sequence_started = False
 
 add = ""
+
+def setupSeats():
+        
+      import json
+
+      # Opening JSON file
+      f = open('seats.json')
+
+      # returns JSON object as
+      # a dictionary
+      data = json.load(f)
+      
+      # Iterating through the json
+      # list
+      for i in data['seats']:
+          print(i)
+          playerSeats.append(Seat(
+                int(i['seat']),
+                int(i['start']),
+                int(i['length'])))
+      # Closing file
+      f.close()
+
+
+def setCurrentSeat(start, numPixels):
+    print("Set current: " + str(start) + " : " + str(numPixels))
+    for i in range(start, numPixels, 1):
+        strip.setPixelColor(i, Color(0, 255, 0))
+        strip.show()
+
+
+def setNextSeat(start, numPixels):
+    for i in range(start, numPixels, 1):
+        strip.setPixelColor(i, Color(255, 0, 0))
+        strip.show()
+
+
+def findSeat(playerName):
+    for x in ( player for player in players if player.name == playerName):
+        for i in playerSeats:
+            if i.seat == x.seat:
+                return i
+    
+    return None
+
+
+def setSeatInactive(player):
+    print(player)
+    inactiveSeat = findSeat(player.name)
+    if inactiveSeat is not None:
+        for i in range(inactiveSeat.start, inactiveSeat.length, 1):
+            strip.setPixelColor(i, Color(255, 255, 255))
+            strip.show()
+
+
+def setAllSeats():
+    for i in playerSeats:
+        for i in range(0, 90, 1):
+            strip.setPixelColor(i, Color(255, 255, 255))
+            strip.show()
 
 
 def getCurrentActivePlayer():
@@ -57,18 +133,33 @@ def rotatePlayers():
         return
 
     if getCurrentActivePlayer() is None:
-        findNextEnabledPlayer(0).is_current = True
-        findNextEnabledPlayer(0).is_next = True
-
+        currentPlayer = findNextEnabledPlayer(0)
+        currentPlayer.is_current = True
+        nextPlayer = findNextEnabledPlayer(0)
+        nextPlayer.is_next = True
+        # Get seat details for player seat
+        newseat = findSeat(currentPlayer.name)
+        if newseat is not None:
+            setCurrentSeat(newseat.start, newseat.length)
+        newseat = findSeat(nextPlayer.name)
+        if newseat is not None:
+            setNextSeat(newseat.start, newseat.length)
     else:
         # Current player is no longer current, moved to what was previously next player
-        getCurrentActivePlayer().is_current = False
+        currentPlayer = getCurrentActivePlayer()
+        currentPlayer.is_current = False
+        # set white
+        setSeatInactive(currentPlayer)
         next_player = getNextActivePlayer()
         next_player.is_current = True
         next_player.is_next = False
+        nextPlayer = findSeat(next_player.name)
+        setCurrentSeat(nextPlayer.start, nextPlayer.length)
 
         # New next player found here
-        findNextEnabledPlayer(players.index(next_player)).is_next = True
+        nextPlayer = findNextEnabledPlayer(players.index(next_player))
+        nextPlayer.is_next = True
+        setNextSeat(findSeat(nextPlayer.name).start, findSeat(nextPlayer.name).length)
 
 
 def findPlayer(name):
@@ -127,11 +218,12 @@ def resetCharacters():
             int(i['ac']),
             int(i['pass_int']),
             int(i['pass_per']),
-            True, False))
-    print(players)
+            True, False, int(i['seat'])))
+    print("Players created")
     # Closing file
     f.close()
-
+    setupSeats()
+    setAllSeats()
 
 def sortPlayers():
     players.sort(key=lambda player: (-player.initiative, -
@@ -165,8 +257,6 @@ def dashboard():
             if request.form['button'] == 'add_player':
                 return redirect(url_for('add_character'))
             elif request.form['button'] == 'sort':
-                # TODO: if a non-player is returned with a matching init, we return render with error for that player
-                # TODO: call function to check for matching inits where we have no dex value
                 updatePlayers(request.form)
                 if checkDex(request.form) is None:
                     sortPlayers()
@@ -175,6 +265,7 @@ def dashboard():
                 sequence_started = True
                 rotatePlayers()
             elif request.form['button'] == 'reset':
+
                 sequence_started = False
                 resetCharacters()
             else:
@@ -195,7 +286,7 @@ def dashboard():
                 10,
                 True,
                 0,
-                0, 0, 0, False, True))
+                0, 0, 0, False, True, 0))
             monster = monster + 1
         elif 'npc' in request.form:
             updatePlayers(request.form)
@@ -206,7 +297,7 @@ def dashboard():
                 10,
                 True,
                 0,
-                0, 0, 0, False, False))
+                0, 0, 0, False, False, 0))
             npc = npc + 1
         count = len([elem for elem in players if elem.is_player == False])
         global add
@@ -229,7 +320,7 @@ def add_character():
             int(request.form['initiative-input']),
             True,
             int(request.form['dexterity-input']),
-            0, 0, 0, False, False
+            0, 0, 0, False, False, int(request.form['seat-input'])
         ))
 
         sortPlayers()
@@ -240,4 +331,9 @@ def add_character():
 
 
 if __name__ == "__main__":
+    # Create NeoPixel object with appropriate configuration.
+    strip = PixelStrip(LED_COUNT, LED_PIN, LED_FREQ_HZ, LED_DMA,
+                       LED_INVERT, LED_BRIGHTNESS, LED_CHANNEL, LED_STRIP)
+    # Intialize the library (must be called once before other functions).
+    strip.begin()
     app.run(debug=True)

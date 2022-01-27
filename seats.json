@@ -1,0 +1,37 @@
+{ "seats": [
+  {
+    "seat": 1,
+    "start": 0,
+    "length": 14
+  },
+  {
+    "seat": 2,
+    "start": 14,
+    "length": 17
+  },
+  {
+    "seat": 3,
+    "start": 31,
+    "length": 15
+  },
+  {
+    "seat": 4,
+    "start": 46,
+    "length": 15
+  },
+  {
+    "seat": 5,
+    "start": 61,
+    "length": 15
+  },
+  {
+    "seat": 6,
+    "start": 76,
+    "length": 8
+  },
+  {
+    "seat": 7,
+    "start": 84,
+    "length": 7
+  }
+]}

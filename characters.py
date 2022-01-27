@@ -10,7 +10,8 @@ class Character:
                  pass_int: int,
                  pass_per: int,
                  is_player: bool,
-                 is_monster: bool
+                 is_monster: bool,
+                 seat: int
                  ):
         self.name = name
         self.initiative = initiative
@@ -23,6 +24,7 @@ class Character:
         self.pass_per = pass_per
         self.is_player = is_player
         self.is_monster = is_monster
+        self.seat = seat
 
     def toggle_enabled(self):
         self.enabled = not self.enabled
