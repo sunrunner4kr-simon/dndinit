@@ -5,7 +5,7 @@
     "ac":"16",
     "pass_int":"19",
     "pass_per":"11",
-    "seat":1
+    "seat":2
   },
   {
     "name": "Saelwyn",
@@ -13,7 +13,7 @@
     "ac":"15",
     "pass_int":"11",
     "pass_per":"17",
-    "seat":2
+    "seat":3
   },
   {
     "name": "Kaelar",
@@ -21,7 +21,7 @@
     "ac":"15",
     "pass_int":"15",
     "pass_per":"12",
-    "seat":3
+    "seat":4
   },
   {
     "name": "Owly",
@@ -29,7 +29,7 @@
     "ac":"11",
     "pass_int":"2",
     "pass_per":"13",
-    "seat":3
+    "seat":4
   },
   {
     "name": "Tree",
@@ -37,7 +37,7 @@
     "ac":"15",
     "pass_int":"9",
     "pass_per":"12",
-    "seat":4
+    "seat":5
   },
   {
     "name": "Gith",
@@ -45,7 +45,7 @@
     "ac":"15",
     "pass_int":"11",
     "pass_per":"12",
-    "seat":5
+    "seat":6
   },
   {
     "name": "Otadus",
@@ -53,7 +53,7 @@
     "ac":"18",
     "pass_int":"10",
     "pass_per":"11",
-    "seat":6
+    "seat":7
   },
   {
     "name": "Hannah",
@@ -61,7 +61,7 @@
     "ac":"17",
     "pass_int":"16",
     "pass_per":"12",
-    "seat":4
+    "seat":5
   },
   {
     "name": "Hannah",
@@ -69,6 +69,6 @@
     "ac":"17",
     "pass_int":"16",
     "pass_per":"12",
-    "seat":4
+    "seat":5
   }
 ]}

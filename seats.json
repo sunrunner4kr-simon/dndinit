@@ -7,31 +7,31 @@
   {
     "seat": 2,
     "start": 14,
-    "length": 17
+    "length": 31
   },
   {
     "seat": 3,
     "start": 31,
-    "length": 15
+    "length": 46
   },
   {
     "seat": 4,
     "start": 46,
-    "length": 15
+    "length": 61
   },
   {
     "seat": 5,
     "start": 61,
-    "length": 15
+    "length": 76
   },
   {
     "seat": 6,
     "start": 76,
-    "length": 8
+    "length": 84
   },
   {
     "seat": 7,
     "start": 84,
-    "length": 7
+    "length": 91
   }
 ]}

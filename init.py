@@ -33,7 +33,7 @@ sequence_started = False
 add = ""
 
 def setupSeats():
-        
+      playerSeats.clear()
       import json
 
       # Opening JSON file
@@ -46,7 +46,6 @@ def setupSeats():
       # Iterating through the json
       # list
       for i in data['seats']:
-          print(i)
           playerSeats.append(Seat(
                 int(i['seat']),
                 int(i['start']),
@@ -56,14 +55,13 @@ def setupSeats():
 
 
 def setCurrentSeat(start, numPixels):
-    print("Set current: " + str(start) + " : " + str(numPixels))
-    for i in range(start, numPixels, 1):
+    for i in range(start, numPixels):
         strip.setPixelColor(i, Color(0, 255, 0))
         strip.show()
 
 
 def setNextSeat(start, numPixels):
-    for i in range(start, numPixels, 1):
+    for i in range(start, numPixels):
         strip.setPixelColor(i, Color(255, 0, 0))
         strip.show()
 
@@ -78,7 +76,6 @@ def findSeat(playerName):
 
 
 def setSeatInactive(player):
-    print(player)
     inactiveSeat = findSeat(player.name)
     if inactiveSeat is not None:
         for i in range(inactiveSeat.start, inactiveSeat.length, 1):
@@ -91,7 +88,6 @@ def setAllSeats():
         for i in range(0, 90, 1):
             strip.setPixelColor(i, Color(255, 255, 255))
             strip.show()
-
 
 def getCurrentActivePlayer():
     if len(players) < 2:
@@ -113,7 +109,7 @@ def getNextActivePlayer():
 def findNextEnabledPlayer(start_index):
     if start_index >= len(players):
         start_index = 0
-    for i in range(start_index, len(players) - 1):
+    for i in range(start_index, len(players)):
         if players[i].enabled and not players[i].is_current and not players[i].is_next:
             return players[i]
 
@@ -141,25 +137,33 @@ def rotatePlayers():
         newseat = findSeat(currentPlayer.name)
         if newseat is not None:
             setCurrentSeat(newseat.start, newseat.length)
-        newseat = findSeat(nextPlayer.name)
-        if newseat is not None:
-            setNextSeat(newseat.start, newseat.length)
+        if newseat is not findSeat(nextPlayer.name):
+            newseat = findSeat(nextPlayer.name)
+            if newseat is not None: 
+                setNextSeat(newseat.start, newseat.length)
     else:
         # Current player is no longer current, moved to what was previously next player
         currentPlayer = getCurrentActivePlayer()
         currentPlayer.is_current = False
+        print("Setting last current false: " + currentPlayer.name)
         # set white
         setSeatInactive(currentPlayer)
         next_player = getNextActivePlayer()
         next_player.is_current = True
+        print("Setting new current true: " + next_player.name)
         next_player.is_next = False
-        nextPlayer = findSeat(next_player.name)
-        setCurrentSeat(nextPlayer.start, nextPlayer.length)
+        print("Setting new current next false: " + next_player.name)
+        nextSeat = findSeat(next_player.name)
+        setCurrentSeat(nextSeat.start, nextSeat.length)
+        print("Set Current Seat: " + next_player.name)
 
         # New next player found here
         nextPlayer = findNextEnabledPlayer(players.index(next_player))
         nextPlayer.is_next = True
-        setNextSeat(findSeat(nextPlayer.name).start, findSeat(nextPlayer.name).length)
+        print("Setting new next true: " + nextPlayer.name)
+        if findSeat(next_player.name) is not findSeat(nextPlayer.name):
+            setNextSeat(findSeat(nextPlayer.name).start, findSeat(nextPlayer.name).length)
+            print("Set Next Seat: " + nextPlayer.name)
 
 
 def findPlayer(name):
@@ -209,7 +213,6 @@ def resetCharacters():
     # Iterating through the json
     # list
     for i in data['players']:
-        print(i)
         players.append(Character(
             str(i['name']),
             int(10),
@@ -286,7 +289,7 @@ def dashboard():
                 10,
                 True,
                 0,
-                0, 0, 0, False, True, 0))
+                0, 0, 0, False, True, 1))
             monster = monster + 1
         elif 'npc' in request.form:
             updatePlayers(request.form)
@@ -297,7 +300,7 @@ def dashboard():
                 10,
                 True,
                 0,
-                0, 0, 0, False, False, 0))
+                0, 0, 0, False, False, 1))
             npc = npc + 1
         count = len([elem for elem in players if elem.is_player == False])
         global add
