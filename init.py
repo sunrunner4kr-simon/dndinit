@@ -13,7 +13,7 @@ LED_COUNT = 91         # Number of LED pixels.
 LED_PIN = 18           # GPIO pin connected to the pixels (must support PWM!).
 LED_FREQ_HZ = 800000   # LED signal frequency in hertz (usually 800khz)
 LED_DMA = 10           # DMA channel to use for generating signal (try 10)
-LED_BRIGHTNESS = 255   # Set to 0 for darkest and 255 for brightest
+LED_BRIGHTNESS = 100   # Set to 0 for darkest and 255 for brightest
 # True to invert the signal (when using NPN transistor level shift)
 LED_INVERT = False
 LED_CHANNEL = 0
@@ -57,12 +57,14 @@ def setupSeats():
 def setCurrentSeat(start, numPixels):
     for i in range(start, numPixels):
         strip.setPixelColor(i, Color(0, 255, 0))
+        strip.setBrightness(255)
         strip.show()
 
 
 def setNextSeat(start, numPixels):
     for i in range(start, numPixels):
         strip.setPixelColor(i, Color(255, 0, 0))
+        strip.setBrightness(255)
         strip.show()
 
 
@@ -80,13 +82,18 @@ def setSeatInactive(player):
     if inactiveSeat is not None:
         for i in range(inactiveSeat.start, inactiveSeat.length, 1):
             strip.setPixelColor(i, Color(255, 255, 255))
+            strip.setBrightness(100)
             strip.show()
 
 
 def setAllSeats():
-    for i in playerSeats:
-        for i in range(0, 90, 1):
+    for i in range(0, 14, 1):
+            strip.setPixelColor(i, Color(0, 255, 0))
+            strip.setBrightness(100)
+            strip.show()
+    for i in range(14, 91, 1):
             strip.setPixelColor(i, Color(255, 255, 255))
+            strip.setBrightness(100)
             strip.show()
 
 def getCurrentActivePlayer():
