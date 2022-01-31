@@ -1,3 +1,5 @@
+import json
+
 
 class Character:
 
@@ -28,3 +30,28 @@ class Character:
 
     def toggle_enabled(self):
         self.enabled = not self.enabled
+
+    def loadCharacters():
+        players = []
+        # Opening JSON file
+        f = open('players.json')
+
+        # returns JSON object as
+        # a dictionary
+        data = json.load(f)
+
+        # Iterating through the json
+        # list
+        for i in data['players']:
+            players.append(Character(
+                str(i['name']),
+                int(10),
+                True,
+                int(i['dexterity']),
+                int(i['ac']),
+                int(i['pass_int']),
+                int(i['pass_per']),
+                True, False, int(i['seat'])))
+        # Closing file
+        f.close()
+        return players

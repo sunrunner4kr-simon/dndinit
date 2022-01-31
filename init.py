@@ -2,7 +2,7 @@ import time
 
 from operator import attrgetter
 from socket import socket
-from rpi_ws281x import Color, PixelStrip, ws
+#from rpi_ws281x import Color, PixelStrip, ws
 
 from flask import Flask, render_template, request, redirect, url_for, flash
 from characters import Character
@@ -17,14 +17,14 @@ LED_BRIGHTNESS = 100   # Set to 0 for darkest and 255 for brightest
 # True to invert the signal (when using NPN transistor level shift)
 LED_INVERT = False
 LED_CHANNEL = 0
-LED_STRIP = ws.SK6812_STRIP_RGBW
+#LED_STRIP = ws.SK6812_STRIP_RGBW
 
 app = Flask(__name__)
 app.secret_key = "hello"
 
 character_names = ["Shanko", "Saelwyn",
                    "Kaelar", "Owly", "Tree", "Gith", "Otadus"]
-players = []
+Character.players = []
 playerSeats = []
 monster = 1
 npc = 1
@@ -32,69 +32,70 @@ sequence_started = False
 
 add = ""
 
+
 def setupSeats():
-      playerSeats.clear()
-      import json
+    playerSeats.clear()
+    import json
 
-      # Opening JSON file
-      f = open('seats.json')
+    # Opening JSON file
+    f = open('seats.json')
 
-      # returns JSON object as
-      # a dictionary
-      data = json.load(f)
-      
-      # Iterating through the json
-      # list
-      for i in data['seats']:
-          playerSeats.append(Seat(
-                int(i['seat']),
-                int(i['start']),
-                int(i['length'])))
-      # Closing file
-      f.close()
+    # returns JSON object as
+    # a dictionary
+    data = json.load(f)
 
-
-def setCurrentSeat(start, numPixels):
-    for i in range(start, numPixels):
-        strip.setPixelColor(i, Color(0, 255, 0))
-        strip.setBrightness(255)
-        strip.show()
+    # Iterating through the json
+    # list
+    for i in data['seats']:
+        playerSeats.append(Seat(
+            int(i['seat']),
+            int(i['start']),
+            int(i['length'])))
+    # Closing file
+    f.close()
 
 
-def setNextSeat(start, numPixels):
-    for i in range(start, numPixels):
-        strip.setPixelColor(i, Color(255, 0, 0))
-        strip.setBrightness(255)
-        strip.show()
+# def setCurrentSeat(start, numPixels):
+#    for i in range(start, numPixels):
+#        strip.setPixelColor(i, Color(0, 255, 0))
+#        strip.setBrightness(255)
+#        strip.show()
+
+
+# def setNextSeat(start, numPixels):
+#    for i in range(start, numPixels):
+#        strip.setPixelColor(i, Color(255, 0, 0))
+#        strip.setBrightness(255)
+#        strip.show()
 
 
 def findSeat(playerName):
-    for x in ( player for player in players if player.name == playerName):
+    for x in (player for player in players if player.name == playerName):
         for i in playerSeats:
             if i.seat == x.seat:
                 return i
-    
+
     return None
 
 
-def setSeatInactive(player):
-    inactiveSeat = findSeat(player.name)
-    if inactiveSeat is not None:
-        for i in range(inactiveSeat.start, inactiveSeat.length, 1):
-            strip.setPixelColor(i, Color(255, 255, 255))
-            strip.setBrightness(100)
-            strip.show()
+# def setSeatInactive(player):
+#    inactiveSeat = findSeat(player.name)
+#    if inactiveSeat is not None:
+#        for i in range(inactiveSeat.start, inactiveSeat.length, 1):
+#            strip.setPixelColor(i, Color(255, 255, 255))
+#            strip.setBrightness(100)
+#            strip.show()
 
 
-def setAllSeats():
-    for i in range(0, 14, 1):
-            strip.setPixelColor(i, Color(0, 255, 0))
-            strip.setBrightness(100)
-            strip.show()
-    for i in range(14, 91, 1):
-            strip.setPixelColor(i, Color(255, 255, 255))
-            strip.setBrightness(100)
-            strip.show()
+# def setAllSeats():
+#    for i in range(0, 14, 1):
+#            strip.setPixelColor(i, Color(0, 255, 0))
+#            strip.setBrightness(100)
+#            strip.show()
+#    for i in range(14, 91, 1):
+#            strip.setPixelColor(i, Color(255, 255, 255))
+#            strip.setBrightness(100)
+#            strip.show()
 
 def getCurrentActivePlayer():
     if len(players) < 2:
@@ -142,35 +143,35 @@ def rotatePlayers():
         nextPlayer.is_next = True
         # Get seat details for player seat
         newseat = findSeat(currentPlayer.name)
-        if newseat is not None:
-            setCurrentSeat(newseat.start, newseat.length)
-        if newseat is not findSeat(nextPlayer.name):
-            newseat = findSeat(nextPlayer.name)
-            if newseat is not None: 
-                setNextSeat(newseat.start, newseat.length)
+#        if newseat is not None:
+#            setCurrentSeat(newseat.start, newseat.length)
+#        if newseat is not findSeat(nextPlayer.name):
+#            newseat = findSeat(nextPlayer.name)
+#            if newseat is not None:
+#                setNextSeat(newseat.start, newseat.length)
     else:
         # Current player is no longer current, moved to what was previously next player
         currentPlayer = getCurrentActivePlayer()
         currentPlayer.is_current = False
         print("Setting last current false: " + currentPlayer.name)
         # set white
-        setSeatInactive(currentPlayer)
+#        setSeatInactive(currentPlayer)
         next_player = getNextActivePlayer()
         next_player.is_current = True
         print("Setting new current true: " + next_player.name)
         next_player.is_next = False
         print("Setting new current next false: " + next_player.name)
-        nextSeat = findSeat(next_player.name)
-        setCurrentSeat(nextSeat.start, nextSeat.length)
-        print("Set Current Seat: " + next_player.name)
+#        nextSeat = findSeat(next_player.name)
+#        setCurrentSeat(nextSeat.start, nextSeat.length)
+#        print("Set Current Seat: " + next_player.name)
 
         # New next player found here
         nextPlayer = findNextEnabledPlayer(players.index(next_player))
         nextPlayer.is_next = True
         print("Setting new next true: " + nextPlayer.name)
-        if findSeat(next_player.name) is not findSeat(nextPlayer.name):
-            setNextSeat(findSeat(nextPlayer.name).start, findSeat(nextPlayer.name).length)
-            print("Set Next Seat: " + nextPlayer.name)
+#        if findSeat(next_player.name) is not findSeat(nextPlayer.name):
+#            setNextSeat(findSeat(nextPlayer.name).start, findSeat(nextPlayer.name).length)
+#            print("Set Next Seat: " + nextPlayer.name)
 
 
 def findPlayer(name):
@@ -206,34 +207,14 @@ def resetCharacters():
     npc = 1
     global add
     add = ""
-    players.clear()
 
-    import json
-
-    # Opening JSON file
-    f = open('data.json')
-
-    # returns JSON object as
-    # a dictionary
-    data = json.load(f)
-
-    # Iterating through the json
-    # list
-    for i in data['players']:
-        players.append(Character(
-            str(i['name']),
-            int(10),
-            True,
-            int(i['dexterity']),
-            int(i['ac']),
-            int(i['pass_int']),
-            int(i['pass_per']),
-            True, False, int(i['seat'])))
+    global players
+    # players.clear()
+    players = Character.loadCharacters()
     print("Players created")
-    # Closing file
-    f.close()
     setupSeats()
-    setAllSeats()
+#    setAllSeats()
+
 
 def sortPlayers():
     players.sort(key=lambda player: (-player.initiative, -
@@ -275,9 +256,10 @@ def dashboard():
                 sequence_started = True
                 rotatePlayers()
             elif request.form['button'] == 'reset':
-
                 sequence_started = False
                 resetCharacters()
+            elif request.form['button'] == 'manage':
+                return redirect(url_for('players'))
             else:
                 pass  # unknown
         if 'enable' in request.form:
@@ -340,10 +322,19 @@ def add_character():
         return render_template("add_characters.html")
 
 
+@app.route("/players", methods=['GET', 'POST'])
+def players():
+    if request.method == 'POST':
+        if 'remove' in request.form:
+            return render_template("players.html", content=Character.loadCharacters())
+    elif request.method == 'GET':
+        return render_template("players.html", content=Character.loadCharacters())
+
+
 if __name__ == "__main__":
     # Create NeoPixel object with appropriate configuration.
-    strip = PixelStrip(LED_COUNT, LED_PIN, LED_FREQ_HZ, LED_DMA,
-                       LED_INVERT, LED_BRIGHTNESS, LED_CHANNEL, LED_STRIP)
+    #    strip = PixelStrip(LED_COUNT, LED_PIN, LED_FREQ_HZ, LED_DMA,
+    #                       LED_INVERT, LED_BRIGHTNESS, LED_CHANNEL, LED_STRIP)
     # Intialize the library (must be called once before other functions).
-    strip.begin()
+    #    strip.begin()
     app.run(debug=True)

@@ -26,8 +26,19 @@
         border: solid 3px;
         border-color: steelblue;
         color: steelblue;
-        height: 100px;
+        
         font-size: 1.6em;
+        font-weight: 600;
+        font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
+          "Lucida Sans", Arial, sans-serif;
+      }
+      .btn-header {
+        border-radius: 6px;
+        border: solid 3px;
+        border-color: darkslategray;
+        color: darkslategray;
+        
+        font-size: 1.2em;
         font-weight: 600;
         font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
           "Lucida Sans", Arial, sans-serif;
@@ -90,9 +101,24 @@
   </head>
   <body>
     <div class="container-fluid vh-100">
-      <h1 class="display-3 mh-10 h-5 d-inline-block">
-        <i class="fab fa-d-and-d"></i>Init Tracker
-      </h1>
+      <div class="row">
+        <div class="col">
+          <h1 class="display-3 mh-10 h-5 d-inline-block">
+            <i class="fab fa-d-and-d"></i>Init Tracker
+          </h1>
+        </div>
+        <div class="col">
+          <div class="col text-center p-2">
+            <form action="#" method="post"><button
+              type="submit"
+              class="btn btn-header btn-lg w-50"
+              name="button"
+              value="manage"
+            >
+            Manage Players
+            </button></form>
+        </div>
+      </div>
       {% block content %}{% endblock %}
     </div>
 
