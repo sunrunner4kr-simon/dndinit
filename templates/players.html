@@ -1,9 +1,9 @@
 {% extends "base.html" %} {% block title %}Init Tracker{% endblock %} {% block
 content %}
-<form action="#" method="post">
   <div class="row mh-80 h-80">
     <div class="col overflow-auto">
         {% for character in content %}
+        <form action="#" method="post">
         <div class="input-group mb-3">
           <label
             class="input-group-text w-25 text-left"
@@ -17,7 +17,7 @@ content %}
               class="form-control"
               placeholder="1-10"
               aria-describedby="basic-addon1"
-              name="{{ character.ac }}"
+              name="ac"
               value="{{ character.ac }}"
             />
             <i
@@ -31,7 +31,7 @@ content %}
               class="form-control"
               placeholder="1-10"
               aria-describedby="basic-addon1"
-              name="{{ character.ac }}"
+              name="per"
               value="{{ character.ac }}"
             />
             <i class="fas fa-eye" style="font-size: 1rem; color: black"></i>
@@ -42,7 +42,7 @@ content %}
               class="form-control"
               placeholder="1-10"
               aria-describedby="basic-addon1"
-              name="{{ character.ac }}"
+              name="inv"
               value="{{ character.ac }}"
             />
             <i class="fas fa-search" style="font-size: 1rem; color: black"></i>
@@ -53,10 +53,20 @@ content %}
               class="form-control"
               placeholder="1-10"
               aria-describedby="basic-addon1"
-              name="{{ character.seat }}"
+              name="seat"
               value="{{ character.seat }}"
             />
             <i class="fas fa-chair" style="font-size: 1rem; color: black"></i>
+          </button>
+          <button
+            class="btn d-inline-block btn-success"
+            type="submit"
+            id="button-addon1"
+            value="{{ character.name }}"
+            name="save"
+            style="width: 100px"
+          >
+            Save
           </button>
           <button
             class="btn d-inline-block btn-danger"
@@ -69,6 +79,7 @@ content %}
             Remove
           </button>
         </div>
+      </form>
         {% endfor %}
         <!-- for item in players -->
       </div>
@@ -107,6 +118,6 @@ content %}
         SAVE
       </button>
     </div>
-</form>
+
 
 {% endblock %}
