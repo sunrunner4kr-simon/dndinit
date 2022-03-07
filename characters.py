@@ -42,15 +42,20 @@ class Character(db.Model):
         self.is_monster = is_monster
         self.seat = seat
 
+    def getCharacterSeat(playerName):
+        char = Character.query.filter_by(name=playerName).first()
+        return char.seat
+
     def toggle_enabled(self):
         player = Character.query.filter_by(name=self.name).first()
         player.enabled = not player.enabled
         db.session.commit()
         self.enabled = not self.enabled
 
-    def addMonster(count):
+    def addMonster():
+        count = Character.query.filter_by(is_monster=True).count()
         monster = Character(
-            "Monster " + str(count),
+            "Monster " + str(count+1),
             10,
             True,
             0,
@@ -58,9 +63,11 @@ class Character(db.Model):
         db.session.add(monster)
         db.session.commit()
 
-    def addNpc(count):
+    def addNpc():
+        count = Character.query.filter_by(
+            is_monster=False, is_player=False).count()
         npc = Character(
-            "NPC " + str(count),
+            "NPC " + str(count+1),
             10,
             True,
             0,
@@ -95,6 +102,7 @@ class Character(db.Model):
 #        f.close()
 #        return players
 
+
     def resetPlayers():
         rows = Character.query.all()
         for player in rows:
@@ -114,7 +122,9 @@ class Character(db.Model):
             if row.name in update_request:
                 if not update_request[row.name]:
                     return "Error"
-                row.initiative = int(update_request[row.name])
+                sep = ' '
+                stripped = update_request[row.name].split(sep, 1)[0]
+                row.initiative = int(stripped)
             if "DEX" + row.name in update_request:
                 row.dexterity = int(update_request["DEX"+row.name])
                 print(row.name + " dex updated to " +

@@ -13,53 +13,44 @@ sequence_started = False
 add = ""
 
 
-def setupSeats():
-    playerSeats.clear()
-    import json
+# def setupSeats():
+#    playerSeats.clear()
+#    import json
 
-    # Opening JSON file
-    f = open('seats.json')
+# Opening JSON file
+#    f = open('seats.json')
 
-    # returns JSON object as
-    # a dictionary
-    data = json.load(f)
+# returns JSON object as
+# a dictionary
+#    data = json.load(f)
 
-    # Iterating through the json
-    # list
-    for i in data['seats']:
-        playerSeats.append(Seat(
-            int(i['seat']),
-            int(i['start']),
-            int(i['length'])))
-    # Closing file
-    f.close()
+# Iterating through the json
+# list
+#    for i in data['seats']:
+#        playerSeats.append(Seat(
+#            int(i['seat']),
+#            int(i['start']),
+#            int(i['length'])))
+# Closing file
+#    f.close()
 
 
 # def setCurrentSeat(start, numPixels):
-#    for i in range(start, numPixels):
-#        strip.setPixelColor(i, Color(0, 255, 0))
-#        strip.setBrightness(255)
-#        strip.show()
-
-
-# def setNextSeat(start, numPixels):
 #    for i in range(start, numPixels):
 #        strip.setPixelColor(i, Color(255, 0, 0))
 #        strip.setBrightness(255)
 #        strip.show()
 
 
-def findSeat(playerName):
-    for x in (player for player in players if player.name == playerName):
-        for i in playerSeats:
-            if i.seat == x.seat:
-                return i
-
-    return None
+# def setNextSeat(start, numPixels):
+#    for i in range(start, numPixels):
+#        strip.setPixelColor(i, Color(0, 255, 0))
+#        strip.setBrightness(255)
+#        strip.show()
 
 
-# def setSeatInactive(player):
-#    inactiveSeat = findSeat(player.name)
+#  def setSeatInactive(player):
+#    inactiveSeat = Seat.findSeat(Character.getCharacterSeat(player))
 #    if inactiveSeat is not None:
 #        for i in range(inactiveSeat.start, inactiveSeat.length, 1):
 #            strip.setPixelColor(i, Color(255, 255, 255))
@@ -98,9 +89,9 @@ def findPlayer(name):
 
 
 def updatePlayers(update_request):
-    if sequence_started:
-        flash("Cannot sort once sequence has started!")
-        return
+    # if sequence_started:
+    #    flash("Cannot sort once sequence has started!")
+    #    return
 
     if(Character.updatePlayers(update_request) == "Error"):
         flash("Must set all initiatives first!")
@@ -108,10 +99,6 @@ def updatePlayers(update_request):
 
 
 def resetCharacters():
-    global monster
-    monster = 1
-    global npc
-    npc = 1
     global add
     add = ""
 
@@ -119,13 +106,11 @@ def resetCharacters():
     # players.clear()
     #players = Character.loadCharacters()
     players = Character.query.all()
-    print("Players created")
-    print(players)
+    print("Players reset")
 
     # update db
     Character.resetPlayers()
 
-    setupSeats()
 #    setAllSeats()
 
 
@@ -182,15 +167,11 @@ def dashboard():
         elif 'monster' in request.form:
             updatePlayers(request.form)
             # add generic monster
-            global monster
-            monster = monster + 1
-            Character.addMonster(monster)
+            Character.addMonster()
         elif 'npc' in request.form:
             updatePlayers(request.form)
-            # add generic monster
-            global npc
-            npc = npc + 1
-            Character.addNpc(npc)
+            # add generic npc
+            Character.addNpc()
 
         #count = len([elem for elem in players if elem.is_player == False])
         #global add

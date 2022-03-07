@@ -1,4 +1,11 @@
-class Seat:
+from database import db
+
+
+class Seat(db.Model):
+
+    seat = db.Column(db.Integer, primary_key=True)
+    start = db.Column(db.Integer, unique=False, nullable=False)
+    length = db.Column(db.Integer, unique=False, nullable=False)
 
     def __init__(self,
                  seat: int,
@@ -7,30 +14,7 @@ class Seat:
         self.seat = seat
         self.start = start
         self.length = length
-        
-    def setupSeats():
-        
-      import json
 
-      # Opening JSON file
-      f = open('seats.json')
-
-      # returns JSON object as
-      # a dictionary
-      data = json.load(f)
-
-      # Iterating through the json
-      # list
-      seats = []
-      for i in data['seats']:
-          
-          seats.append(Seat(
-                int(i['seat']),
-                int(i['start']),
-                int(i['length'])))
-      print(seats)
-      # Closing file
-      f.close()
-      return seats
-
-
+    def findSeat(seatNumber):
+        seat = Seat.query.filter_by(Seat.seat).first()
+        return seat
