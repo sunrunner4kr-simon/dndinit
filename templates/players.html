@@ -2,6 +2,9 @@
 content %}
   <div class="row mh-80 h-80">
     <div class="col overflow-auto">
+      {% if not content %}
+      
+      {% else %}
         {% for character in content %}
         <form action="#" method="post">
         <div class="input-group mb-3">
@@ -11,7 +14,21 @@ content %}
           >
             <i class="fas fa-dice-d20 p-2"></i>{{ character.name }}</label
           >
-          <button class="btn d-inline-block btn-light" style="width: 80px">
+          <div class="btn d-inline-block btn-light" style="width: 80px">
+            <input
+              type="text"
+              class="form-control"
+              placeholder="1-10"
+              aria-describedby="basic-addon1"
+              name="dexterity"
+              value="{{ character.dexterity }}"
+            />
+            <i
+              class="fas fa-running"
+              style="font-size: 1em; color: black"
+            ></i>
+          </div>
+          <div class="btn d-inline-block btn-light" style="width: 80px">
             <input
               type="text"
               class="form-control"
@@ -24,30 +41,30 @@ content %}
               class="fas fa-shield-alt"
               style="font-size: 1em; color: black"
             ></i>
-          </button>
-          <button class="btn d-inline-block btn-light" style="width: 80px">
+          </div>
+          <div class="btn d-inline-block btn-light" style="width: 80px">
             <input
               type="text"
               class="form-control"
               placeholder="1-10"
               aria-describedby="basic-addon1"
               name="per"
-              value="{{ character.ac }}"
+              value="{{ character.pass_per }}"
             />
             <i class="fas fa-eye" style="font-size: 1rem; color: black"></i>
-          </button>
-          <button class="btn d-inline-block btn-light" style="width: 80px">
+          </div>
+          <div class="btn d-inline-block btn-light" style="width: 80px">
             <input
               type="text"
               class="form-control"
               placeholder="1-10"
               aria-describedby="basic-addon1"
               name="inv"
-              value="{{ character.ac }}"
+              value="{{ character.pass_inv }}"
             />
             <i class="fas fa-search" style="font-size: 1rem; color: black"></i>
-          </button>
-          <button class="btn d-inline-block btn-light" style="width: 80px">
+          </div>
+          <div class="btn d-inline-block btn-light" style="width: 80px">
             <input
               type="text"
               class="form-control"
@@ -57,7 +74,7 @@ content %}
               value="{{ character.seat }}"
             />
             <i class="fas fa-chair" style="font-size: 1rem; color: black"></i>
-          </button>
+          </div>
           <button
             class="btn d-inline-block btn-success"
             type="submit"
@@ -81,6 +98,7 @@ content %}
         </div>
       </form>
         {% endfor %}
+        {% endif %}
         <!-- for item in players -->
       </div>
     </div>
@@ -92,13 +110,14 @@ content %}
     </div>
     {% endif %} {% endwith %}
   </div>
+  <form action="#" method="post">
   <div class="row row-cols-2 p-3 mh-15 h-15">
     <div class="col text-center px-4">
       <button
         type="submit"
         class="btn btn-custom btn-lg w-100 {{ add }}"
-        name="button"
-        value="add_player"
+        name="add_character"
+        value="add_character"
         {{
         add
         }}
@@ -107,17 +126,6 @@ content %}
         ADD PLAYER
       </button>
     </div>
-    <div class="col text-center px-4">
-      <button
-        type="submit"
-        class="btn btn-custom btn-lg w-100"
-        name="button"
-        value="save"
-      >
-        <i class="fas fa-save"></i>
-        SAVE
-      </button>
-    </div>
-
+  </form>
 
 {% endblock %}

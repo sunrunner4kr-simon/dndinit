@@ -11,7 +11,7 @@ class Character(db.Model):
     is_next = db.Column(db.Boolean, unique=False, nullable=False)
     dexterity = db.Column(db.Integer, unique=False, nullable=False)
     ac = db.Column(db.Integer, unique=False, nullable=False)
-    pass_int = db.Column(db.Integer, unique=False, nullable=False)
+    pass_inv = db.Column(db.Integer, unique=False, nullable=False)
     pass_per = db.Column(db.Integer, unique=False, nullable=False)
     is_player = db.Column(db.Boolean, unique=False, nullable=False)
     is_monster = db.Column(db.Boolean, unique=False, nullable=False)
@@ -23,7 +23,7 @@ class Character(db.Model):
                  enabled: bool,
                  dexterity: int,
                  ac: int,
-                 pass_int: int,
+                 pass_inv: int,
                  pass_per: int,
                  is_player: bool,
                  is_monster: bool,
@@ -36,7 +36,7 @@ class Character(db.Model):
         self.is_next = False
         self.dexterity = dexterity
         self.ac = ac
-        self.pass_int = pass_int
+        self.pass_inv = pass_inv
         self.pass_per = pass_per
         self.is_player = is_player
         self.is_monster = is_monster
@@ -76,33 +76,6 @@ class Character(db.Model):
         db.session.commit()
 
 
-#    def loadCharacters():
-#        players = []
-#        # Opening JSON file
-#        f = open('players.json')
-
-        # returns JSON object as
-        # a dictionary
-#        data = json.load(f)
-
-        # Iterating through the json
-        # list
-#        for i in data['players']:
-#            players.append(Character(
-#                str(i['name']),
-#                int(10),
-#                True,
-#                int(i['dexterity']),
-#                int(i['ac']),
-#                int(i['pass_int']),
-#                int(i['pass_per']),
-#                True, False, int(i['seat'])))
-        # Closing file
-
-#        f.close()
-#        return players
-
-
     def resetPlayers():
         rows = Character.query.all()
         for player in rows:
@@ -115,6 +88,16 @@ class Character(db.Model):
         for monster in monsters:
             db.session.delete(monster)
             db.session.commit()
+    
+    def createPlayer(create_request):
+        new = Character(
+            create_request['name-input'],
+            create_request['initiative-input'],
+            True,
+            create_request['dexterity-input'],
+            0, 0, 0, True, False, create_request['seat-input'])
+        db.session.add(new)
+        db.session.commit()
 
     def updatePlayers(update_request):
         rows = Character.query.all()
@@ -130,6 +113,21 @@ class Character(db.Model):
                 print(row.name + " dex updated to " +
                       update_request["DEX"+row.name])
         db.session.commit()
+
+    def updatePlayer(update_request):
+        char = Character.query.filter_by(name=update_request['save']).first()
+        print("updating: " + update_request['save'])
+        if not char:
+            return False
+        else:
+            char.dexterity = update_request['dexterity']
+            char.ac = update_request['ac']
+            char.pass_per = update_request['per']
+            char.pass_inv = update_request['inv']
+            char.seat = update_request['seat']
+            print(char.name + " updated" )
+            db.session.commit()
+            return True
 
     def getNextActivePlayer(players):
         for char in players:

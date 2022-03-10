@@ -1,0 +1,102 @@
+{% extends "base.html" %} {% block title %}Init Tracker{% endblock %} {% block
+content %}
+  <div class="row mh-80 h-80">
+    <div class="col overflow-auto">
+      {% if not content %}
+      No seats
+      {% else %}
+        {% for seat in content %}
+        <form action="#" method="post">
+        <div class="input-group mb-3">
+          <label
+            class="input-group-text w-25 text-left"
+            style="font-size: 1.2em; text-align: left"
+          >
+            <i class="fas fa-chair p-2"></i>{{ seat.seat }}</label
+          >
+          <button class="btn d-inline-block btn-light" style="width: 80px">
+            <input
+              type="text"
+              class="form-control"
+              placeholder="1-10"
+              aria-describedby="basic-addon1"
+              name="ac"
+              value="{{ seat.start }}"
+            />
+            Start
+          </button>
+          <button class="btn d-inline-block btn-light" style="width: 80px">
+            <input
+              type="text"
+              class="form-control"
+              placeholder="1-10"
+              aria-describedby="basic-addon1"
+              name="per"
+              value="{{ seat.length }}"
+            />
+            Length
+          </button>
+          <button
+            class="btn d-inline-block btn-success"
+            type="submit"
+            id="button-addon1"
+            value="{{ seat.seat }}"
+            name="save"
+            style="width: 100px"
+          >
+            Save
+          </button>
+          <button
+            class="btn d-inline-block btn-danger"
+            type="submit"
+            id="button-addon1"
+            value="{{ seat.seat }}"
+            name="remove"
+            style="width: 100px"
+          >
+            Remove
+          </button>
+        </div>
+      </form>
+        {% endfor %}
+        {% endif %}
+        
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    {% with messages = get_flashed_messages() %} {% if messages %}
+    <div class="alert alert-danger" role="alert">
+      {% for message in messages %} {{ message }} {% endfor %}
+    </div>
+    {% endif %} {% endwith %}
+  </div>
+  <div class="row row-cols-2 p-3 mh-15 h-15">
+    <div class="col text-center px-4">
+      <button
+        type="submit"
+        class="btn btn-custom btn-lg w-100 {{ add }}"
+        name="button"
+        value="add_seat"
+        {{
+        add
+        }}
+      >
+        <i class="fas fa-plus"></i>
+        ADD SEAT
+      </button>
+    </div>
+    <div class="col text-center px-4">
+      <button
+        type="submit"
+        class="btn btn-custom btn-lg w-100"
+        name="button"
+        value="save"
+      >
+        <i class="fas fa-save"></i>
+        SAVE
+      </button>
+    </div>
+
+
+{% endblock %}

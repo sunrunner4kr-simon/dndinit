@@ -1,6 +1,8 @@
 from flask import render_template, request, redirect, url_for, flash, Blueprint
 from characters import Character
 from seats import Seat
+from flask import current_app as app
+from rpi_ws281x import Color, PixelStrip, ws
 
 
 index_blueprint = Blueprint('index', __name__)
@@ -35,38 +37,38 @@ add = ""
 #    f.close()
 
 
-# def setCurrentSeat(start, numPixels):
-#    for i in range(start, numPixels):
-#        strip.setPixelColor(i, Color(255, 0, 0))
-#        strip.setBrightness(255)
-#        strip.show()
+def setCurrentSeat(start, numPixels):
+    for i in range(start, numPixels):
+        app.strip.setPixelColor(i, Color(255, 0, 0))
+        app.strip.setBrightness(255)
+        app.strip.show()
 
 
-# def setNextSeat(start, numPixels):
-#    for i in range(start, numPixels):
-#        strip.setPixelColor(i, Color(0, 255, 0))
-#        strip.setBrightness(255)
-#        strip.show()
+def setNextSeat(start, numPixels):
+    for i in range(start, numPixels):
+        app.strip.setPixelColor(i, Color(0, 255, 0))
+        app.strip.setBrightness(255)
+        app.strip.show()
 
 
-#  def setSeatInactive(player):
-#    inactiveSeat = Seat.findSeat(Character.getCharacterSeat(player))
-#    if inactiveSeat is not None:
-#        for i in range(inactiveSeat.start, inactiveSeat.length, 1):
-#            strip.setPixelColor(i, Color(255, 255, 255))
-#            strip.setBrightness(100)
-#            strip.show()
+def setSeatInactive(player):
+    inactiveSeat = Seat.findSeat(Character.getCharacterSeat(player))
+    if inactiveSeat is not None:
+        for i in range(inactiveSeat.start, inactiveSeat.length, 1):
+            app.strip.setPixelColor(i, Color(255, 255, 255))
+            app.strip.setBrightness(100)
+            app.strip.show()
 
 
-# def setAllSeats():
-#    for i in range(0, 14, 1):
-#            strip.setPixelColor(i, Color(0, 255, 0))
-#            strip.setBrightness(100)
-#            strip.show()
-#    for i in range(14, 91, 1):
-#            strip.setPixelColor(i, Color(255, 255, 255))
-#            strip.setBrightness(100)
-#            strip.show()
+def setAllSeats():
+    for i in range(0, 14, 1):
+            app.strip.setPixelColor(i, Color(0, 255, 0))
+            app.strip.setBrightness(100)
+            app.strip.show()
+    for i in range(14, 91, 1):
+            app.strip.setPixelColor(i, Color(255, 255, 255))
+            app.strip.setBrightness(100)
+            app.strip.show()
 
 
 def rotatePlayers():
@@ -111,7 +113,7 @@ def resetCharacters():
     # update db
     Character.resetPlayers()
 
-#    setAllSeats()
+    setAllSeats()
 
 
 def checkDex(dex_request):
@@ -134,19 +136,56 @@ def index():
     resetCharacters()
     return redirect(url_for('index.dashboard'))
 
+@index_blueprint.route("/add_character", methods=['GET', 'POST'])
+def add_character():
+    if request.method == 'POST':
+        if 'back' in request.form:
+            return redirect(url_for('index.dashboard'))
+        elif 'save' in request.form:
+            if Character.createPlayer(request.form):
+                flash("Character created", 'info')
+            else:
+                flash("Character creation failed", 'error')
+        
+        return redirect(url_for('index.dashboard'))
+    elif request.method == 'GET':
+        return render_template("add_characters.html")
+
+@index_blueprint.route("/players", methods=['GET', 'POST'])
+def players():
+    if request.method == 'POST':
+        if 'save' in request.form:
+            if Character.updatePlayer(request.form):
+                flash("Succesfully saved", 'info')
+            chars = Character.query.all()
+            return render_template("players.html", content=chars)
+        elif 'add_character' in request.form:
+            return redirect(url_for('index.add_character'))
+
+        chars = Character.query.all()
+        return render_template("players.html", content=chars)
+    elif request.method == 'GET':
+        chars = Character.query.all()
+        if not chars:
+            flash("No players", 'warning')
+        return render_template("players.html", content=chars)
+
+@index_blueprint.route("/seats", methods=['GET', 'POST'])
+def seats():
+    seats = Seat.query.all()
+    return render_template("seats.html", content=seats)
 
 @index_blueprint.route("/dashboard", methods=['GET', 'POST'])
 def dashboard():
     global sequence_started
     if request.method == 'POST':
         if 'button' in request.form:
-            if request.form['button'] == 'add_player':
-                return redirect(url_for('add_character'))
+            if request.form['button'] == 'add_character':
+                return redirect(url_for('index.add_character'))
             elif request.form['button'] == 'save':
                 updatePlayers(request.form)
                 if checkDex(request.form) is None:
                     pass
-
             elif request.form['button'] == 'next':
                 sequence_started = True
                 rotatePlayers()
@@ -154,7 +193,9 @@ def dashboard():
                 sequence_started = False
                 resetCharacters()
             elif request.form['button'] == 'manage':
-                return redirect(url_for('players'))
+                return redirect(url_for('index.players'))
+            elif request.form['button'] == 'seats':
+                return redirect(url_for('index.seats'))
             else:
                 pass  # unknown
         if 'enable' in request.form:

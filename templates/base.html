@@ -104,20 +104,31 @@
       <div class="row">
         <div class="col">
           <h1 class="display-3 mh-10 h-5 d-inline-block">
-            <i class="fab fa-d-and-d"></i>Init Tracker
+            <i class="fab fa-d-and-d"></i><a class="text-dark" href="{{ url_for('index.dashboard') }}">Init Tracker</a>
           </h1>
         </div>
         <div class="col">
+          <div class="row align-items-start">
           <div class="col text-center p-2">
             <form action="#" method="post"><button
               type="submit"
-              class="btn btn-header btn-lg w-50"
+              class="btn btn-header btn-lg"
               name="button"
               value="manage"
             >
             Manage Players
             </button></form>
         </div>
+        <div class="col text-center p-2">
+          <form action="#" method="post"><button
+            type="submit"
+            class="btn btn-header btn-lg"
+            name="button"
+            value="seats"
+          >
+          Manage Seats
+          </button></form>
+      </div></div>
       </div>
       {% block content %}{% endblock %}
     </div>

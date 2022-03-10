@@ -2,7 +2,7 @@ import time
 
 from operator import attrgetter
 from socket import socket
-#from rpi_ws281x import Color, PixelStrip, ws
+from rpi_ws281x import Color, PixelStrip, ws
 
 from flask import Flask, render_template, request, redirect, url_for, flash, Blueprint
 from characters import Character
@@ -22,7 +22,7 @@ LED_BRIGHTNESS = 100   # Set to 0 for darkest and 255 for brightest
 # True to invert the signal (when using NPN transistor level shift)
 LED_INVERT = False
 LED_CHANNEL = 0
-#LED_STRIP = ws.SK6812_STRIP_RGBW
+LED_STRIP = ws.SK6812_STRIP_RGBW
 
 
 # Create app first
@@ -46,11 +46,13 @@ def setup_database(app):
 
 if __name__ == "__main__":
     # Create NeoPixel object with appropriate configuration.
-    #    strip = PixelStrip(LED_COUNT, LED_PIN, LED_FREQ_HZ, LED_DMA,
-    #                       LED_INVERT, LED_BRIGHTNESS, LED_CHANNEL, LED_STRIP)
+    strip = PixelStrip(LED_COUNT, LED_PIN, LED_FREQ_HZ, LED_DMA,
+                           LED_INVERT, LED_BRIGHTNESS, LED_CHANNEL, LED_STRIP)
     # Intialize the library (must be called once before other functions).
-    #    strip.begin()
+    #strip.begin()
     app = create_app()
+    app.strip = strip
+    app.strip.begin()
     if not os.path.isfile('/init.db'):
         setup_database(app)
     app.run(debug=True, host='0.0.0.0')
