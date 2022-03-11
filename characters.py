@@ -47,13 +47,13 @@ class Character(db.Model):
         char = Character.query.filter_by(name=playerName).first()
         return char.seat
 
-    def toggle_enabled(self):
-        player = Character.query.filter_by(name=self.name).first()
+    def toggle_enabled(playerName):
+        player = Character.query.filter_by(name=playerName).first()
         player.enabled = not player.enabled
         db.session.commit()
-        self.enabled = not self.enabled
 
     def addMonster():
+        #TODO: fix name numbering - needs to increment from last monster name
         count = Character.query.filter_by(is_monster=True).count()
         monster = Character(
             "Monster " + str(count+1),
@@ -65,6 +65,7 @@ class Character(db.Model):
         db.session.commit()
 
     def addNpc():
+        #TODO: fix name numbering
         count = Character.query.filter_by(
             is_monster=False, is_player=False).count()
         npc = Character(
@@ -104,6 +105,15 @@ class Character(db.Model):
             0, 0, 0, True, False, create_request['seat-input'])
         db.session.add(new)
         db.session.commit()
+
+    def deletePlayer(playerName):
+        char = Character.query.filter_by(name=playerName).first()
+        if not char:
+            return False
+        else:
+            db.session.delete(char)
+            db.session.commit()    
+            return True
 
     def updatePlayers(update_request):
         rows = Character.query.all()

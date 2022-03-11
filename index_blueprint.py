@@ -1,6 +1,7 @@
 from flask import render_template, request, redirect, url_for, flash, Blueprint
 from characters import Character
 from seats import Seat
+from parties import Party
 from flask import current_app as app
 from rpi_ws281x import Color, PixelStrip, ws
 
@@ -27,7 +28,6 @@ def setAllSeats():
             app.strip.setBrightness(100)
             app.strip.show()
 
-
 def rotatePlayers():
     # TODO
 
@@ -37,15 +37,6 @@ def rotatePlayers():
     else:
         flash(error)
         return
-
-
-def findPlayer(name):
-    for player in players:
-        if player.name == name:
-            return player
-    print("couldn't find player")
-    return
-
 
 def updatePlayers(update_request):
     # if sequence_started:
@@ -106,38 +97,76 @@ def add_character():
     elif request.method == 'GET':
         return render_template("add_characters.html")
 
+@index_blueprint.route("/add_party", methods=['GET', 'POST'])
+def add_party():
+    if request.method == 'POST':
+        if 'back' in request.form:
+            return redirect(url_for('index.parties'))
+        elif 'save' in request.form:
+            if Party.createParty(request.form):
+                flash("Party created", 'info')
+            else:
+                flash("Party creation failed", 'error')
+        
+        return redirect(url_for('index.parties'))
+    elif request.method == 'GET':
+        return render_template("add_party.html")
+
 @index_blueprint.route("/players", methods=['GET', 'POST'])
 def players():
     if request.method == 'POST':
+        #TODO: add remove handling
         if 'save' in request.form:
             if Character.updatePlayer(request.form):
                 flash("Succesfully saved", 'info')
-            chars = Character.query.all()
-            return render_template("players.html", content=chars)
+            chars = Character.query.filter_by(is_player=True).all()
+            return render_template("players.html", content=chars, page="players")
         elif 'add_character' in request.form:
             return redirect(url_for('index.add_character'))
 
-        chars = Character.query.all()
-        return render_template("players.html", content=chars)
+        chars = Character.query.filter_by(is_player=True).all()
+        return render_template("players.html", content=chars, page="players")
     elif request.method == 'GET':
-        chars = Character.query.all()
+        chars = Character.query.filter_by(is_player=True).all()
         if not chars:
             flash("No players", 'warning')
-        return render_template("players.html", content=chars)
+        return render_template("players.html", content=chars, page="players")
 
 @index_blueprint.route("/seats", methods=['GET', 'POST'])
 def seats():
-    seats = Seat.query.all()
-    return render_template("seats.html", content=seats)
+    if request.method == 'POST':
+        #TODO: add remove handling
+        #TODO: add save handling
+        
+        seats = Seat.query.all()
+        return render_template("seats.html", content=seats, page="seats")
+    elif request.method == 'GET':
+        seats = Seat.query.all()
+        return render_template("seats.html", content=seats, page="seats")
+
+@index_blueprint.route("/parties", methods=['GET', 'POST'])
+def parties():
+    if request.method == 'POST':
+        if 'remove' in request.form:
+            if Party.deleteParty(request.form):
+                flash("Succesfully removed", 'info')
+        elif 'save' in request.form:
+            if Party.updateParty(request.form):
+                flash("Succesfully saved", 'info')
+        elif 'add_party' in request.form:
+            return redirect(url_for('index.add_party'))
+        parties = Party.query.all()
+        return render_template("parties.html", content=parties, page="parties")
+    elif request.method == 'GET':
+        parties = Party.query.all()
+        return render_template("parties.html", content=parties, page="parties")
 
 @index_blueprint.route("/dashboard", methods=['GET', 'POST'])
 def dashboard():
     global sequence_started
     if request.method == 'POST':
         if 'button' in request.form:
-            if request.form['button'] == 'add_character':
-                return redirect(url_for('index.add_character'))
-            elif request.form['button'] == 'save':
+            if request.form['button'] == 'save':
                 updatePlayers(request.form)
                 if checkDex(request.form) is None:
                     pass
@@ -154,12 +183,14 @@ def dashboard():
             else:
                 pass  # unknown
         if 'enable' in request.form:
-            Character.toggle_enabled(findPlayer(request.form['enable']))
+            Character.toggle_enabled(request.form['enable'])
         elif 'remove' in request.form:
-            updatePlayers(request.form)
             # remove temp player
-            index = players.index(findPlayer(request.form['remove']))
-            del players[index]
+            if Character.deletePlayer(request.form['remove']):
+                flash("Player deleted", 'info')
+            else:
+                flash("Failed to delete player", 'warning')
+            return redirect(url_for('index.dashboard'))
         elif 'monster' in request.form:
             updatePlayers(request.form)
             # add generic monster
@@ -170,11 +201,15 @@ def dashboard():
             Character.addNpc()
 
         count = Character.query.filter_by(is_player=False).count()
-        global add
+        add = ''
         if count == 7:
             add = "disabled"
         players = Character.query.all()
-        return render_template("dyn.html", content=players, add=add, dex=checkDex(request.form))
+        return render_template("dyn.html", content=players, add=add, page="dashboard", dex=checkDex(request.form))
     elif request.method == 'GET':
+        add = ''
+        count = Character.query.filter_by(is_player=False).count()
+        if count == 7:
+            add = "disabled"
         players = Character.query.all()
-        return render_template("dyn.html", content=players, add=add)
+        return render_template("dyn.html", content=players, add=add, page="dashboard")

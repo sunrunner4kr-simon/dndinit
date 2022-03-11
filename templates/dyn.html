@@ -5,27 +5,31 @@
     <div class="col">
       <div class="d-flex flex-column">
         {% for character in content %}{% if character.is_player == True %}
-        <div class="input-group mb-3">
+        <div class="row gx-2 mb-3 h-100">
+        <div class="col-4 h-100">
           <label
-            class="input-group-text w-25 text-left"
-            style="font-size: 1.2em; text-align: left"
+            class="input-group-text text-left"
+            style="font-size: 1.7em; text-align: left"
           >
             {% if character.is_player == True %}<i
               class="fas fa-dice-d20 p-2"
             ></i
-            >{% else %}{% endif %}{{ character.name }}</label
-          >
+            >{% else %}{% endif %}{{ character.name }}</label>
+        </div>
+        <div class="col-2 h-100">
           <input
             type="text"
-            class="form-control {% if character.is_current %}current{% elif character.is_next %}next{% endif %}"
+            class="form-control-xlg w-100 {% if character.is_current %}current{% elif character.is_next %}next{% endif %}"
             placeholder="1-10"
             aria-describedby="basic-addon1"
             name="{{ character.name }}"
-            value="{{ character.initiative }}{% if character.is_current %} - CURRENT{% elif character.is_next %} - NEXT{% endif %}"
+            value="{{ character.initiative }}"
             onfocus="this.value=''"
           />
+        </div>
+        <div class="h-100 col-3 text-center">
           <button
-            class="btn d-inline-block btn-{% if character.enabled %}success{% else %}danger{% endif %}"
+            class="btn btn-xlg btn-{% if character.enabled %}success{% else %}danger{% endif %}"
             type="submit"
             id="button-addon1"
             value="{{ character.name }}"
@@ -34,6 +38,8 @@
           >
             {% if character.enabled %}Enabled{% else %}Disabled{% endif %}
           </button>
+        </div>
+        <div class="col-3 h-100">
           <button class="btn d-inline-block btn-light" style="width: 40px">
             {{ character.ac }}
             <i
@@ -54,7 +60,9 @@
             {% else %}
             <i class="fas fa-search" style="font-size: 1rem; color: black"></i>
             {% endif %}
+          </button>
         </div>
+      </div>
         {% endif %} {% endfor %}
         <!-- for item in players -->
       </div>
@@ -63,36 +71,41 @@
     <div class="col">
       <div class="d-flex flex-column">
         {% for character in content %} {% if character.is_player == False %}
-        <div class="input-group mb-3" >
+        <div class="row gx-2 mb-3 h-100">
+          <div class="col-4 h-100">
           <label
-            class="input-group-text w-25 text-left"
-            style="font-size: 1.2em; text-align: left"
+            class="input-group-text text-left"
+            style="font-size: 1.7em; text-align: left"
           >
             {% if character.is_monster == True %}<i class="fas fa-skull p-2" Style="color:red"></i>{% else %}<i class="fas fa-user p-2"></i>{% endif %}{{ character.name }}</label
           >
+        </div>
+        <div class="col-2 h-100">
           <input
             type="text"
-            class="form-control {% if character.is_current %}current{% elif character.is_next %}next{% endif %}"
+            class="form-control-xlg w-100 {% if character.is_current %}current{% elif character.is_next %}next{% endif %}"
             placeholder="1-10"
             aria-describedby="basic-addon1"
             name="{{ character.name }}"
-            value="{{ character.initiative }}{% if character.is_current %} - CURRENT{% elif character.is_next %} - NEXT{% endif %}"
+            value="{{ character.initiative }}"
             onfocus="this.value=''"
           />
-
+        </div>
+        <div class="h-100 col-3 text-center">
           <button
-            class="btn d-inline-block btn-danger"
+            class="btn btn-xlg btn-danger"
             type="submit"
             id="button-addon1"
             value="{{ character.name }}"
             name="remove"
-            style="width: 100px"
           >
             Remove
           </button>
+        </div>
+        <div class="col-2 h-100">
           <input
             type="text"
-            class="form-control ms-2 {% if dex == character.name %}dex_miss{% endif %}"
+            class="form-control-xlg w-100 ms-2 {% if dex == character.name %}dex_miss{% endif %}"
             placeholder="DEX"
             aria-describedby="basic-addon1"
             name="DEX{{ character.name }}"
@@ -100,6 +113,7 @@
             onfocus="this.value=''"
           />
         </div>
+      </div>
         {% endif %} {% endfor %}
         <div class="row row-cols-2 gx-4">
             <div class="col">
@@ -140,19 +154,8 @@
       {% endif %} 
     {% endwith %}
   </div>
-  <div class="row row-cols-4 p-3" style="height:120px" >
+  <div class="row row-cols-3 p-3" style="height:120px" >
     
-    <div class="col text-center px-4">
-      <button
-        type="submit"
-        class="btn btn-custom btn-lg w-100 h-100{{ add }}"
-        name="button"
-        value="add_character"
-        {{ add }}
-      ><i class="fas fa-plus"></i>
-        ADD PLAYER
-      </button>
-    </div>
     <div class="col text-center px-4">
       <button
         type="submit"

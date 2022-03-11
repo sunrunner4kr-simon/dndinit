@@ -1,0 +1,45 @@
+{% extends "base.html" %} {% block title %}Init Tracker{% endblock %} {% block
+content %}
+<h1>Add Party</h1>
+<form action="#" method="post">
+  <div class="input-group mb-3">
+    <label
+      class="input-group-text w-25 d-inline-block"
+      style="font-size: 1.6em; text-align: left"
+      >Name:</label
+    >
+    <input
+      type="text"
+      name="name-input"
+      class="form-control"
+      placeholder="Snow's magical misfits"
+      aria-describedby="basic-addon1"
+      style="font-size: 1.6em; text-align: left"
+      autofocus
+    />
+  </div>
+
+  <div class="row row-cols-2 p-3 gx-4">
+    <div class="col">
+      <button
+        type="submit"
+        name="save"
+        value="add_party_submit"
+        class="btn btn-custom btn-lg w-100"
+      >
+        ADD PARTY
+      </button>
+    </div>
+    <div class="col">
+      <button
+        type="submit"
+        name="back"
+        value="add_party_back"
+        class="btn btn-custom btn-lg w-100"
+      >
+        Back
+      </button>
+    </div>
+  </div>
+</form>
+{% endblock %}

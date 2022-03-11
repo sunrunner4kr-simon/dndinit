@@ -3,104 +3,109 @@ content %}
   <div class="row mh-80 h-80">
     <div class="col overflow-auto">
       {% if not content %}
-      
+       No players
       {% else %}
         {% for character in content %}
         <form action="#" method="post">
-        <div class="input-group mb-3">
-          <label
-            class="input-group-text w-25 text-left"
-            style="font-size: 1.2em; text-align: left"
-          >
-            <i class="fas fa-dice-d20 p-2"></i>{{ character.name }}</label
-          >
-          <div class="btn d-inline-block btn-light" style="width: 80px">
-            <input
-              type="text"
-              class="form-control"
-              placeholder="1-10"
-              aria-describedby="basic-addon1"
-              name="dexterity"
-              value="{{ character.dexterity }}"
-            />
-            <i
-              class="fas fa-running"
-              style="font-size: 1em; color: black"
-            ></i>
+          <div class="row gx-3 mb-3 h-100">
+            <div class="col-2 h-100">
+              <label
+                class="input-group-text text-left"
+                style="font-size: 1.7em; text-align: left"
+              >
+                <i class="fas fa-dice-d20 p-2"></i>{{ character.name }}</label
+              >
+            </div>
+            <div class="col-5 h-100">
+              <div class="btn d-inline-block btn-light" style="width: 90px">
+                <input
+                  type="text"
+                  class="form-control-xlg w-100"
+                  placeholder="1-10"
+                  aria-describedby="basic-addon1"
+                  name="dexterity"
+                  value="{{ character.dexterity }}"
+                />
+                <i
+                  class="fas fa-running"
+                  style="font-size: 1em; color: black"
+                ></i>
+              </div>
+              <div class="btn d-inline-block btn-light" style="width: 90px">
+                <input
+                  type="text"
+                  class="form-control-xlg w-100"
+                  placeholder="1-10"
+                  aria-describedby="basic-addon1"
+                  name="ac"
+                  value="{{ character.ac }}"
+                />
+                <i
+                  class="fas fa-shield-alt"
+                  style="font-size: 1em; color: black"
+                ></i>
+              </div>
+              <div class="btn d-inline-block btn-light" style="width: 90px">
+                <input
+                  type="text"
+                  class="form-control-xlg w-100"
+                  placeholder="1-10"
+                  aria-describedby="basic-addon1"
+                  name="per"
+                  value="{{ character.pass_per }}"
+                />
+                <i class="fas fa-eye" style="font-size: 1rem; color: black"></i>
+              </div>
+              <div class="btn d-inline-block btn-light" style="width: 90px">
+                <input
+                  type="text"
+                  class="form-control-xlg w-100"
+                  placeholder="1-10"
+                  aria-describedby="basic-addon1"
+                  name="inv"
+                  value="{{ character.pass_inv }}"
+                />
+                <i class="fas fa-search" style="font-size: 1rem; color: black"></i>
+              </div>
+              <div class="btn d-inline-block btn-light" style="width: 90px">
+                <input
+                  type="text"
+                  class="form-control-xlg w-100"
+                  placeholder="1-10"
+                  aria-describedby="basic-addon1"
+                  name="seat"
+                  value="{{ character.seat }}"
+                />
+                <i class="fas fa-chair" style="font-size: 1rem; color: black"></i>
+              </div>
+            </div>
+            <div class="col-2 h-100">
+              <button
+                class="btn btn-xlg btn-success w-100"
+                type="submit"
+                id="button-addon1"
+                value="{{ character.name }}"
+                name="save"
+              >
+                Save
+              </button>
+            </div>
+            <div class="col-2 h-100">
+              <button
+                class="btn btn-xlg btn-danger w-100"
+                type="submit"
+                id="button-addon1"
+                value="{{ character.name }}"
+                name="remove"
+              >
+                Remove
+              </button>
+            </div>
           </div>
-          <div class="btn d-inline-block btn-light" style="width: 80px">
-            <input
-              type="text"
-              class="form-control"
-              placeholder="1-10"
-              aria-describedby="basic-addon1"
-              name="ac"
-              value="{{ character.ac }}"
-            />
-            <i
-              class="fas fa-shield-alt"
-              style="font-size: 1em; color: black"
-            ></i>
-          </div>
-          <div class="btn d-inline-block btn-light" style="width: 80px">
-            <input
-              type="text"
-              class="form-control"
-              placeholder="1-10"
-              aria-describedby="basic-addon1"
-              name="per"
-              value="{{ character.pass_per }}"
-            />
-            <i class="fas fa-eye" style="font-size: 1rem; color: black"></i>
-          </div>
-          <div class="btn d-inline-block btn-light" style="width: 80px">
-            <input
-              type="text"
-              class="form-control"
-              placeholder="1-10"
-              aria-describedby="basic-addon1"
-              name="inv"
-              value="{{ character.pass_inv }}"
-            />
-            <i class="fas fa-search" style="font-size: 1rem; color: black"></i>
-          </div>
-          <div class="btn d-inline-block btn-light" style="width: 80px">
-            <input
-              type="text"
-              class="form-control"
-              placeholder="1-10"
-              aria-describedby="basic-addon1"
-              name="seat"
-              value="{{ character.seat }}"
-            />
-            <i class="fas fa-chair" style="font-size: 1rem; color: black"></i>
-          </div>
-          <button
-            class="btn d-inline-block btn-success"
-            type="submit"
-            id="button-addon1"
-            value="{{ character.name }}"
-            name="save"
-            style="width: 100px"
-          >
-            Save
-          </button>
-          <button
-            class="btn d-inline-block btn-danger"
-            type="submit"
-            id="button-addon1"
-            value="{{ character.name }}"
-            name="remove"
-            style="width: 100px"
-          >
-            Remove
-          </button>
-        </div>
-      </form>
-        {% endfor %}
-        {% endif %}
-        <!-- for item in players -->
-      </div>
+        </form>
+          {% endfor %}
+          {% endif %}
+          <!-- for item in players -->
     </div>
   </div>
   <div class="row">
@@ -111,20 +116,21 @@ content %}
     {% endif %} {% endwith %}
   </div>
   <form action="#" method="post">
-  <div class="row row-cols-2 p-3 mh-15 h-15">
-    <div class="col text-center px-4">
-      <button
-        type="submit"
-        class="btn btn-custom btn-lg w-100 {{ add }}"
-        name="add_character"
-        value="add_character"
-        {{
-        add
-        }}
-      >
-        <i class="fas fa-plus"></i>
-        ADD PLAYER
-      </button>
+    <div class="row p-3 mh-15 h-15">
+      <div class="col text-center px-4">
+        <button
+          type="submit"
+          class="btn btn-custom btn-lg w-100 {{ add }}"
+          name="add_character"
+          value="add_character"
+          {{
+          add
+          }}
+        >
+          <i class="fas fa-plus"></i>
+          ADD PLAYER
+        </button>
+      </div>
     </div>
   </form>
 

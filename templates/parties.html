@@ -1,0 +1,82 @@
+{% extends "base.html" %} {% block title %}Init Tracker{% endblock %} {% block
+content %}
+  <div class="row mh-80 h-80">
+    <div class="col overflow-auto">
+      {% if not content %}
+      No parties
+      {% else %}
+        {% for party in content %}
+        <form action="#" method="post">
+          <div class="row gx-3 mb-3 h-100">
+            <div class="col-2 h-100">
+            <label
+              class="input-group-text text-left"
+              style="font-size: 1.8em; text-align: left"
+            >
+              <i class="fas fa-users p-2"></i>{{ party.id }}</label
+            >
+            </div>
+            <div class="col-4">
+                <input
+                  type="text"
+                  class="form-control-xlg w-100"
+                  placeholder="1-10"
+                  aria-describedby="basic-addon1"
+                  name="name"
+                  value="{{ party.name }}"
+                />
+            </div>
+            <div class="col-3">
+              <button
+                class="btn btn-xlg btn-success w-100"
+                type="submit"
+                id="button-addon1"
+                value="{{ party.id }}"
+                name="save"
+              >
+                Save
+              </button>
+            </div>
+            <div class="col-3">
+              <button
+                class="btn btn-xlg btn-danger w-100"
+                type="submit"
+                id="button-addon1"
+                value="{{ party.id }}"
+                name="remove"
+              >
+                Remove
+              </button>
+            </div>
+          </div>
+        </form>
+      {% endfor %}
+      {% endif %}
+    </div>
+  </div>
+  <div class="row">
+    {% with messages = get_flashed_messages() %} {% if messages %}
+    <div class="alert alert-danger" role="alert">
+      {% for message in messages %} {{ message }} {% endfor %}
+    </div>
+    {% endif %} {% endwith %}
+  </div>
+  <form action="#" method="post">
+    <div class="row p-3 mh-15 h-15">
+      <div class="col text-center px-4">
+        <button
+          type="submit"
+          class="btn btn-custom btn-lg w-100 {{ add }}"
+          name="add_party"
+          value="add_party"
+          {{
+          add
+          }}
+        >
+          <i class="fas fa-plus"></i>
+          ADD PARTY
+        </button>
+      </div>
+    </div>
+  </form>
+{% endblock %}

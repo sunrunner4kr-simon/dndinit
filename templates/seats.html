@@ -7,17 +7,20 @@ content %}
       {% else %}
         {% for seat in content %}
         <form action="#" method="post">
-        <div class="input-group mb-3">
+          <div class="row gx-3 mb-3 h-100">
+            <div class="col-2">
           <label
-            class="input-group-text w-25 text-left"
-            style="font-size: 1.2em; text-align: left"
+            class="input-group-text text-left"
+            style="font-size: 1.7em; text-align: left"
           >
             <i class="fas fa-chair p-2"></i>{{ seat.seat }}</label
           >
-          <button class="btn d-inline-block btn-light" style="width: 80px">
+        </div>
+        <div class="col-4">
+          <button class="btn d-inline-block btn-light" style="width: 90px">
             <input
               type="text"
-              class="form-control"
+              class="form-control-xlg w-100"
               placeholder="1-10"
               aria-describedby="basic-addon1"
               name="ac"
@@ -25,10 +28,10 @@ content %}
             />
             Start
           </button>
-          <button class="btn d-inline-block btn-light" style="width: 80px">
+          <button class="btn d-inline-block btn-light" style="width: 90px">
             <input
               type="text"
-              class="form-control"
+              class="form-control-xlg w-100"
               placeholder="1-10"
               aria-describedby="basic-addon1"
               name="per"
@@ -36,8 +39,10 @@ content %}
             />
             Length
           </button>
+        </div>
+        <div class="col-3">
           <button
-            class="btn d-inline-block btn-success"
+            class="btn btn-xlg btn-success w-100"
             type="submit"
             id="button-addon1"
             value="{{ seat.seat }}"
@@ -46,8 +51,10 @@ content %}
           >
             Save
           </button>
+        </div>
+        <div class="col-3">
           <button
-            class="btn d-inline-block btn-danger"
+            class="btn btn-xlg btn-danger w-100"
             type="submit"
             id="button-addon1"
             value="{{ seat.seat }}"
@@ -71,12 +78,13 @@ content %}
     </div>
     {% endif %} {% endwith %}
   </div>
-  <div class="row row-cols-2 p-3 mh-15 h-15">
+  <form action="#" method="post">
+  <div class="row p-3 mh-15 h-15">
     <div class="col text-center px-4">
       <button
         type="submit"
         class="btn btn-custom btn-lg w-100 {{ add }}"
-        name="button"
+        name="add_seat"
         value="add_seat"
         {{
         add
@@ -86,17 +94,6 @@ content %}
         ADD SEAT
       </button>
     </div>
-    <div class="col text-center px-4">
-      <button
-        type="submit"
-        class="btn btn-custom btn-lg w-100"
-        name="button"
-        value="save"
-      >
-        <i class="fas fa-save"></i>
-        SAVE
-      </button>
-    </div>
-
+  </form>
 
 {% endblock %}
