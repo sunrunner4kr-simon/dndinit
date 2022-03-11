@@ -1,5 +1,6 @@
 import json
 from database import db
+from seats import Seat
 
 
 class Character(db.Model):
@@ -74,6 +75,11 @@ class Character(db.Model):
             0, 0, 0, False, False, 1)
         db.session.add(npc)
         db.session.commit()
+
+    def setSeatInactive(player):
+        inactiveSeat = Seat.findSeat(Character.getCharacterSeat(player))
+        if inactiveSeat is not None:
+            Seat.setSeatInactive(inactiveSeat)
 
 
     def resetPlayers():
@@ -175,13 +181,13 @@ class Character(db.Model):
             nextPlayer.is_next = True
             db.session.commit()
             # Get seat details for player seat
-            #newseat = findSeat(currentPlayer.name)
-    #        if newseat is not None:
-    #            setCurrentSeat(newseat.start, newseat.length)
-    #        if newseat is not findSeat(nextPlayer.name):
-    #            newseat = findSeat(nextPlayer.name)
-    #            if newseat is not None:
-    #                setNextSeat(newseat.start, newseat.length)
+            newseat = Seat.findSeat(currentPlayer.seat)
+            if newseat is not None:
+                Seat.setCurrentSeat(newseat.start, newseat.length)
+            if newseat is not Seat.findSeat(nextPlayer.seat):
+                newseat = Seat.findSeat(nextPlayer.seat)
+                if newseat is not None:
+                    Seat.setNextSeat(newseat.start, newseat.length)
         else:
             # Current player is no longer current, moved to what was previously next player
             currentPlayer = Character.getCurrentActivePlayer(rows)
@@ -189,15 +195,15 @@ class Character(db.Model):
 
             print("Setting last current false: " + currentPlayer.name)
             # set white
-    #        setSeatInactive(currentPlayer)
+            Character.setSeatInactive(currentPlayer.name)
             next_player = Character.getNextActivePlayer(rows)
             next_player.is_current = True
             print("Setting new current true: " + next_player.name)
             next_player.is_next = False
             print("Setting new current next false: " + next_player.name)
-    #        nextSeat = findSeat(next_player.name)
-    #        setCurrentSeat(nextSeat.start, nextSeat.length)
-    #        print("Set Current Seat: " + next_player.name)
+            nextSeat = Seat.findSeat(next_player.seat)
+            Seat.setCurrentSeat(nextSeat.start, nextSeat.length)
+            print("Set Current Seat: " + next_player.name)
             db.session.commit()
             # New next player found here
             nextPlayer = Character.findNextEnabledPlayer(
@@ -205,9 +211,9 @@ class Character(db.Model):
             nextPlayer.is_next = True
             print("Setting new next true: " + nextPlayer.name)
             db.session.commit()
-    #        if findSeat(next_player.name) is not findSeat(nextPlayer.name):
-    #            setNextSeat(findSeat(nextPlayer.name).start, findSeat(nextPlayer.name).length)
-    #            print("Set Next Seat: " + nextPlayer.name)
+            if Seat.findSeat(next_player.seat) is not Seat.findSeat(nextPlayer.seat):
+                Seat.setNextSeat(Seat.findSeat(nextPlayer.seat).start, Seat.findSeat(nextPlayer.seat).length)
+                print("Set Next Seat: " + nextPlayer.name)
 
     def savePlayer(update):
         players = []

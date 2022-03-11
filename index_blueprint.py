@@ -7,57 +7,14 @@ from rpi_ws281x import Color, PixelStrip, ws
 
 index_blueprint = Blueprint('index', __name__)
 
-playerSeats = []
-monster = 1
-npc = 1
 sequence_started = False
 
 add = ""
 
-
-# def setupSeats():
-#    playerSeats.clear()
-#    import json
-
-# Opening JSON file
-#    f = open('seats.json')
-
-# returns JSON object as
-# a dictionary
-#    data = json.load(f)
-
-# Iterating through the json
-# list
-#    for i in data['seats']:
-#        playerSeats.append(Seat(
-#            int(i['seat']),
-#            int(i['start']),
-#            int(i['length'])))
-# Closing file
-#    f.close()
-
-
-def setCurrentSeat(start, numPixels):
-    for i in range(start, numPixels):
-        app.strip.setPixelColor(i, Color(255, 0, 0))
-        app.strip.setBrightness(255)
-        app.strip.show()
-
-
-def setNextSeat(start, numPixels):
-    for i in range(start, numPixels):
-        app.strip.setPixelColor(i, Color(0, 255, 0))
-        app.strip.setBrightness(255)
-        app.strip.show()
-
-
 def setSeatInactive(player):
     inactiveSeat = Seat.findSeat(Character.getCharacterSeat(player))
     if inactiveSeat is not None:
-        for i in range(inactiveSeat.start, inactiveSeat.length, 1):
-            app.strip.setPixelColor(i, Color(255, 255, 255))
-            app.strip.setBrightness(100)
-            app.strip.show()
+        Seat.setSeatInactive(inactiveSeat)
 
 
 def setAllSeats():
@@ -104,9 +61,7 @@ def resetCharacters():
     global add
     add = ""
 
-    global players
-    # players.clear()
-    #players = Character.loadCharacters()
+    #global players
     players = Character.query.all()
     print("Players reset")
 
@@ -214,12 +169,11 @@ def dashboard():
             # add generic npc
             Character.addNpc()
 
-        #count = len([elem for elem in players if elem.is_player == False])
-        #global add
-        # if count == 8:
-        #   add = "disabled"
+        count = Character.query.filter_by(is_player=False).count()
+        global add
+        if count == 7:
+            add = "disabled"
         players = Character.query.all()
-        # return render_template("dyn.html", content=players, add=add)
         return render_template("dyn.html", content=players, add=add, dex=checkDex(request.form))
     elif request.method == 'GET':
         players = Character.query.all()
