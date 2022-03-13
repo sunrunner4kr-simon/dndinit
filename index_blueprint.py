@@ -47,7 +47,7 @@ def updatePlayers(update_request):
         return
 
 
-def resetCharacters():
+def resetCharacters(party):
     global add
     add = ""
 
@@ -57,6 +57,7 @@ def resetCharacters():
 
     # update db
     Character.resetPlayers()
+    Party.resetCounts(party)
 
     setAllSeats()
 
@@ -81,6 +82,7 @@ def index():
     resetCharacters()
     return redirect(url_for('index.dashboard'))
 
+
 @index_blueprint.route("/add_character", methods=['GET', 'POST'])
 def add_character():
     if request.method == 'POST':
@@ -90,14 +92,14 @@ def add_character():
             party = Party.query.filter_by(active=True).first()
             if not party:
                 activeParty = 0
+                flash("Please select a party first", 'error')
             else:
                 activeParty = party.id
-            if Character.createPlayer(request.form, activeParty):
-                flash("Character created", 'info')
-            else:
-                flash("Character creation failed", 'error')
-        
-        return redirect(url_for('index.players'))
+                if Character.createPlayer(request.form, activeParty):
+                    flash("Character created", 'info')
+                else:
+                    flash("Character creation failed", 'error')
+                return redirect(url_for('index.players'))
     elif request.method == 'GET':
         return render_template("add_characters.html")
 
@@ -117,7 +119,6 @@ def add_party():
         return render_template("add_party.html")
 
 @index_blueprint.route("/players", methods=['GET', 'POST'])
-#TODO: allow edit player name
 def players():
     if request.method == 'POST':
         if 'save' in request.form:
@@ -218,7 +219,7 @@ def dashboard():
                 rotatePlayers(activeParty)
             elif request.form['button'] == 'reset':
                 sequence_started = False
-                resetCharacters()
+                resetCharacters(activeParty)
             elif request.form['button'] == 'manage':
                 return redirect(url_for('index.players'))
             elif request.form['button'] == 'seats':
@@ -229,6 +230,7 @@ def dashboard():
             Party.toggle_active(request.form['changeParty'])
             party = Party.query.filter_by(active=True).first()
             activeParty = party.id
+            resetCharacters(activeParty)
         if 'enable' in request.form:
             Character.toggle_enabled(request.form['enable'])
         elif 'remove' in request.form:
@@ -238,17 +240,20 @@ def dashboard():
             else:
                 flash("Failed to delete player", 'warning')
             return redirect(url_for('index.dashboard'))
-        elif 'monster' in request.form:
+
+        if 'monster' in request.form:
             updatePlayers(request.form)
             # add generic monster
-            Character.addMonster(activeParty)
+            Character.addMonster(activeParty, party.monster_count)
+            Party.addMonsterCount(activeParty)
         elif 'npc' in request.form:
             updatePlayers(request.form)
             # add generic npc
-            Character.addNpc(activeParty)
+            Character.addNpc(activeParty, party.npc_count)
+            Party.addNpcCount(activeParty)
         elif 'summon' in request.form:
-            Character.createSummon(activeParty, request.form['summon'])
-
+            Character.createSummon(activeParty, request.form['summon'], party.summon_count)
+            Party.addSummonCount(activeParty)
         count = Character.query.filter_by(is_player=False).count()
         add = ''
         if count == 7:

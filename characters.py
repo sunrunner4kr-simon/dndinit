@@ -5,7 +5,8 @@ from seats import Seat
 
 class Character(db.Model):
 
-    name = db.Column(db.String(20), primary_key=True)
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(20), unique=True, nullable=False)
     initiative = db.Column(db.Integer, unique=False, nullable=False)
     enabled = db.Column(db.Boolean, unique=False, nullable=False)
     is_current = db.Column(db.Boolean, unique=False, nullable=False)
@@ -55,9 +56,7 @@ class Character(db.Model):
         player.enabled = not player.enabled
         db.session.commit()
 
-    def addMonster(party):
-        #TODO: fix name numbering - needs to increment from last monster name
-        count = Character.query.filter_by(is_monster=True).count()
+    def addMonster(party, count):
         monster = Character(
             "Monster " + str(count+1),
             10,
@@ -67,13 +66,11 @@ class Character(db.Model):
         db.session.add(monster)
         db.session.commit()
 
-    def createSummon(party, playerName):
+    def createSummon(party, playerName, count):
         player = Character.query.filter_by(name=playerName).first()
         if not player:
             return False
 
-        #TODO: fix name numbering - needs to increment from last monster name
-        count = Character.query.filter_by(is_monster=True).count()
         monster = Character(
             "Summon " + str(count+1),
             10,
@@ -83,10 +80,7 @@ class Character(db.Model):
         db.session.add(monster)
         db.session.commit()
 
-    def addNpc(party):
-        #TODO: fix name numbering
-        count = Character.query.filter_by(
-            is_monster=False, is_player=False).count()
+    def addNpc(party, count):
         npc = Character(
             "NPC " + str(count+1),
             10,
@@ -155,6 +149,7 @@ class Character(db.Model):
         if not char:
             return False
         else:
+            char.name = update_request['name']
             char.dexterity = update_request['dexterity']
             char.ac = update_request['ac']
             char.pass_per = update_request['per']
@@ -242,37 +237,3 @@ class Character(db.Model):
             if Seat.findSeat(next_player.seat) is not Seat.findSeat(nextPlayer.seat):
                 Seat.setNextSeat(Seat.findSeat(nextPlayer.seat).start, Seat.findSeat(nextPlayer.seat).length)
                 print("Set Next Seat: " + nextPlayer.name)
-
-#    def savePlayer(update):
-#        players = []
-        # Opening JSON file
-#        f = open('players.json')
-
-        # returns JSON object as
-        # a dictionary
-#        data = json.load(f)
-
-        # Iterating through the json
-        # list
-#        for i in data['players']:
-#            players.append(Character(
-#                str(i['name']),
-#                int(10),
-#                True,
-#                int(i['dexterity']),
-#                int(i['ac']),
-#                int(i['pass_int']),
-#                int(i['pass_per']),
-#                True, False, int(i['seat'])))
-        # Closing file
-#        f.close()
-
-        # make updates
-
-        # save again
-#        json_string = json.dumps([Character.__dict__ for Character in players])
-#        print(json_string)
-#        with open("players.json", "w") as outfile:
-#            json.dump(json_string, outfile)
-
-#        return players

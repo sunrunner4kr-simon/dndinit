@@ -8,13 +8,26 @@ content %}
         {% for character in content %}
         <form action="#" method="post">
           <div class="row gx-3 mb-3 h-100">
-            <div class="col-2 h-100">
+            
+            <div class="col-1 h-100">
               <label
                 class="input-group-text text-left"
                 style="font-size: 1.7em; text-align: left"
               >
-                <i class="fas fa-dice-d20 p-2"></i>{{ character.name }}</label
+                <i class="fas fa-dice-d20 p-2"></i>{{ character.id }}</label
               >
+            </div>
+            <div class="col-2 h-100">
+              <div class="btn d-inline-block btn-light">
+                <input
+                  type="text"
+                  class="form-control-xlg w-100"
+                  placeholder="1-10"
+                  aria-describedby="basic-addon1"
+                  name="name"
+                  value="{{ character.name }}"
+                />
+              </div>
             </div>
             <div class="col-5 h-100">
               <div class="btn d-inline-block btn-light" style="width: 90px">
