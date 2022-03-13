@@ -17,6 +17,7 @@ class Character(db.Model):
     is_player = db.Column(db.Boolean, unique=False, nullable=False)
     is_monster = db.Column(db.Boolean, unique=False, nullable=False)
     seat = db.Column(db.Integer, unique=False, nullable=False)
+    party = db.Column(db.Integer, unique=False, nullable=False)
 
     def __init__(self,
                  name: str,
@@ -28,7 +29,8 @@ class Character(db.Model):
                  pass_per: int,
                  is_player: bool,
                  is_monster: bool,
-                 seat: int
+                 seat: int,
+                 party: int
                  ):
         self.name = name
         self.initiative = initiative
@@ -42,6 +44,7 @@ class Character(db.Model):
         self.is_player = is_player
         self.is_monster = is_monster
         self.seat = seat
+        self.party = party
 
     def getCharacterSeat(playerName):
         char = Character.query.filter_by(name=playerName).first()
@@ -52,7 +55,7 @@ class Character(db.Model):
         player.enabled = not player.enabled
         db.session.commit()
 
-    def addMonster():
+    def addMonster(party):
         #TODO: fix name numbering - needs to increment from last monster name
         count = Character.query.filter_by(is_monster=True).count()
         monster = Character(
@@ -60,11 +63,27 @@ class Character(db.Model):
             10,
             True,
             0,
-            0, 0, 0, False, True, 1)
+            0, 0, 0, False, True, 1, party)
         db.session.add(monster)
         db.session.commit()
 
-    def addNpc():
+    def createSummon(party, playerName):
+        player = Character.query.filter_by(name=playerName).first()
+        if not player:
+            return False
+
+        #TODO: fix name numbering - needs to increment from last monster name
+        count = Character.query.filter_by(is_monster=True).count()
+        monster = Character(
+            "Summon " + str(count+1),
+            10,
+            True,
+            0,
+            0, 0, 0, False, True, player.seat, party)
+        db.session.add(monster)
+        db.session.commit()
+
+    def addNpc(party):
         #TODO: fix name numbering
         count = Character.query.filter_by(
             is_monster=False, is_player=False).count()
@@ -73,7 +92,7 @@ class Character(db.Model):
             10,
             True,
             0,
-            0, 0, 0, False, False, 1)
+            0, 0, 0, False, False, 1, party)
         db.session.add(npc)
         db.session.commit()
 
@@ -96,13 +115,13 @@ class Character(db.Model):
             db.session.delete(monster)
             db.session.commit()
     
-    def createPlayer(create_request):
+    def createPlayer(create_request, party):
         new = Character(
             create_request['name-input'],
             create_request['initiative-input'],
             True,
             create_request['dexterity-input'],
-            0, 0, 0, True, False, create_request['seat-input'])
+            0, 0, 0, True, False, create_request['seat-input'], party)
         db.session.add(new)
         db.session.commit()
 
@@ -160,19 +179,18 @@ class Character(db.Model):
         else:
             return char
 
-    def findNextEnabledPlayer(start_index, players):
+    def findNextEnabledPlayer(start_index, players, party):
         if start_index >= len(players):
             start_index = 0
         for i in range(start_index, len(players)):
-            if players[i].enabled and not players[i].is_current and not players[i].is_next:
+            if players[i].enabled and players[i].party == party and not players[i].is_current and not players[i].is_next:
                 return players[i]
 
         for i in range(0, start_index):
-            if players[i].enabled and not players[i].is_current and not players[i].is_next:
+            if players[i].enabled and players[i].party == party and not players[i].is_current and not players[i].is_next:
                 return players[i]
 
-    def rotatePlayers():
-        # TODO
+    def rotatePlayers(party):
         rows = Character.query.order_by(
             Character.initiative.desc(), Character.dexterity.desc()).all()
         enabled_player_count = 0
@@ -184,10 +202,10 @@ class Character(db.Model):
             return "Not enough enabled players!"
 
         if Character.getCurrentActivePlayer(rows) is None:
-            currentPlayer = Character.findNextEnabledPlayer(0, rows)
+            currentPlayer = Character.findNextEnabledPlayer(0, rows, party)
             currentPlayer.is_current = True
 
-            nextPlayer = Character.findNextEnabledPlayer(0, rows)
+            nextPlayer = Character.findNextEnabledPlayer(0, rows, party)
             nextPlayer.is_next = True
             db.session.commit()
             # Get seat details for player seat
@@ -217,7 +235,7 @@ class Character(db.Model):
             db.session.commit()
             # New next player found here
             nextPlayer = Character.findNextEnabledPlayer(
-                rows.index(next_player), rows)
+                rows.index(next_player), rows, party)
             nextPlayer.is_next = True
             print("Setting new next true: " + nextPlayer.name)
             db.session.commit()
@@ -225,36 +243,36 @@ class Character(db.Model):
                 Seat.setNextSeat(Seat.findSeat(nextPlayer.seat).start, Seat.findSeat(nextPlayer.seat).length)
                 print("Set Next Seat: " + nextPlayer.name)
 
-    def savePlayer(update):
-        players = []
+#    def savePlayer(update):
+#        players = []
         # Opening JSON file
-        f = open('players.json')
+#        f = open('players.json')
 
         # returns JSON object as
         # a dictionary
-        data = json.load(f)
+#        data = json.load(f)
 
         # Iterating through the json
         # list
-        for i in data['players']:
-            players.append(Character(
-                str(i['name']),
-                int(10),
-                True,
-                int(i['dexterity']),
-                int(i['ac']),
-                int(i['pass_int']),
-                int(i['pass_per']),
-                True, False, int(i['seat'])))
+#        for i in data['players']:
+#            players.append(Character(
+#                str(i['name']),
+#                int(10),
+#                True,
+#                int(i['dexterity']),
+#                int(i['ac']),
+#                int(i['pass_int']),
+#                int(i['pass_per']),
+#                True, False, int(i['seat'])))
         # Closing file
-        f.close()
+#        f.close()
 
         # make updates
 
         # save again
-        json_string = json.dumps([Character.__dict__ for Character in players])
-        print(json_string)
-        with open("players.json", "w") as outfile:
-            json.dump(json_string, outfile)
+#        json_string = json.dumps([Character.__dict__ for Character in players])
+#        print(json_string)
+#        with open("players.json", "w") as outfile:
+#            json.dump(json_string, outfile)
 
-        return players
+#        return players

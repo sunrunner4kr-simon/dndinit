@@ -6,14 +6,28 @@ class Party(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(20), unique=False, nullable=False)
+    active = db.Column(db.Boolean, unique=False, nullable=False )
 
     def __init__(self,
-                 name: str):
+                 name: str,
+                 active: bool):
         self.name = name
+        self.active = active
+    
+    def toggle_active(partyName):
+        oldActiveParty = Party.query.filter_by(active=True).first()
+        if not oldActiveParty:
+            pass
+        else:
+            oldActiveParty.active = False
+        newActiveParty = Party.query.filter_by(name=partyName).first()
+        newActiveParty.active = True
+        db.session.commit()
 
     def createParty(create_request):
         new = Party(
-            name=create_request['name-input'])
+            name=create_request['name-input'],
+            active=False)
         db.session.add(new)
         db.session.commit()
 

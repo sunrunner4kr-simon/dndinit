@@ -37,3 +37,23 @@ class Seat(db.Model):
             app.strip.setPixelColor(i, Color(255, 0, 0))
             app.strip.setBrightness(255)
             app.strip.show()
+    
+    def updateSeat(update_request):
+        seat = Seat.query.filter_by(seat=update_request['save']).first()
+        if not seat:
+            return False
+        else:
+            seat.start = update_request['start']
+            seat.length = update_request['length']
+            print(str(seat.seat) + " updated" )
+            db.session.commit()
+            return True
+    
+    def deleteSeat(update_request):
+        seat = Seat.query.filter_by(seat=update_request['remove']).first()
+        if not seat:
+            return False
+        else:
+            db.session.delete(seat)
+            db.session.commit()
+            return True

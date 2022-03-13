@@ -8,63 +8,74 @@ content %}
         {% for seat in content %}
         <form action="#" method="post">
           <div class="row gx-3 mb-3 h-100">
-            <div class="col-2">
-          <label
-            class="input-group-text text-left"
-            style="font-size: 1.7em; text-align: left"
-          >
-            <i class="fas fa-chair p-2"></i>{{ seat.seat }}</label
-          >
-        </div>
-        <div class="col-4">
-          <button class="btn d-inline-block btn-light" style="width: 90px">
-            <input
-              type="text"
-              class="form-control-xlg w-100"
-              placeholder="1-10"
-              aria-describedby="basic-addon1"
-              name="ac"
-              value="{{ seat.start }}"
-            />
-            Start
-          </button>
-          <button class="btn d-inline-block btn-light" style="width: 90px">
-            <input
-              type="text"
-              class="form-control-xlg w-100"
-              placeholder="1-10"
-              aria-describedby="basic-addon1"
-              name="per"
-              value="{{ seat.length }}"
-            />
-            Length
-          </button>
-        </div>
-        <div class="col-3">
-          <button
-            class="btn btn-xlg btn-success w-100"
-            type="submit"
-            id="button-addon1"
-            value="{{ seat.seat }}"
-            name="save"
-            style="width: 100px"
-          >
-            Save
-          </button>
-        </div>
-        <div class="col-3">
-          <button
-            class="btn btn-xlg btn-danger w-100"
-            type="submit"
-            id="button-addon1"
-            value="{{ seat.seat }}"
-            name="remove"
-            style="width: 100px"
-          >
-            Remove
-          </button>
-        </div>
-      </form>
+            <div class="col-1">
+              <label
+                class="input-group-text text-left"
+                style="font-size: 1.7em; text-align: left"
+              >
+                <i class="fas fa-chair p-2 fa-2x"></i></label
+              >
+            </div>
+            <div class="col-4">
+              <div class="btn d-inline-block btn-light" style="width: 90px">
+                <input
+                  type="text"
+                  class="form-control-xlg w-100"
+                  placeholder="1-10"
+                  aria-describedby="basic-addon1"
+                  name="start"
+                  value="{{ seat.seat }}"
+                />
+                Seat
+              </div>
+            <div class="btn d-inline-block btn-light" style="width: 90px">
+              <input
+                type="text"
+                class="form-control-xlg w-100"
+                placeholder="1-10"
+                aria-describedby="basic-addon1"
+                name="start"
+                value="{{ seat.start }}"
+              />
+              Start
+            </div>
+            <div class="btn d-inline-block btn-light" style="width: 90px">
+              <input
+                type="text"
+                class="form-control-xlg w-100"
+                placeholder="1-10"
+                aria-describedby="basic-addon1"
+                name="length"
+                value="{{ seat.length }}"
+              />
+              Length
+            </div>
+          </div>
+          <div class="col-3">
+            <button
+              class="btn btn-xlg btn-success w-100"
+              type="submit"
+              id="button-addon1"
+              value="{{ seat.seat }}"
+              name="save"
+              style="width: 100px"
+            >
+              Save
+            </button>
+          </div>
+          <div class="col-3">
+            <button
+              class="btn btn-xlg btn-danger w-100"
+              type="submit"
+              id="button-addon1"
+              value="{{ seat.seat }}"
+              name="remove"
+              style="width: 100px"
+            >
+              Remove
+            </button>
+          </div>
+        </form>
         {% endfor %}
         {% endif %}
         
