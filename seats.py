@@ -17,7 +17,7 @@ class Seat(db.Model):
         self.length = length
 
     def findSeat(seatNumber):
-        seat = Seat.query.filter_by(seat=Seat.seat).first()
+        seat = Seat.query.filter_by(seat=seatNumber).first()
         return seat
 
     def setNextSeat(start, numPixels):

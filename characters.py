@@ -207,6 +207,7 @@ class Character(db.Model):
             newseat = Seat.findSeat(currentPlayer.seat)
             if newseat is not None:
                 Seat.setCurrentSeat(newseat.start, newseat.length)
+                print("Seat: " + str(newseat.start))
             if newseat is not Seat.findSeat(nextPlayer.seat):
                 newseat = Seat.findSeat(nextPlayer.seat)
                 if newseat is not None:
@@ -225,6 +226,7 @@ class Character(db.Model):
             next_player.is_next = False
             print("Setting new current next false: " + next_player.name)
             nextSeat = Seat.findSeat(next_player.seat)
+            print("nextseat: " + str(nextSeat.start))
             Seat.setCurrentSeat(nextSeat.start, nextSeat.length)
             print("Set Current Seat: " + next_player.name)
             db.session.commit()

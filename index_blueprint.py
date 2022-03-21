@@ -4,6 +4,8 @@ from seats import Seat
 from parties import Party
 from flask import current_app as app
 from rpi_ws281x import Color, PixelStrip, ws
+import requests, json
+from monsters import Monster
 
 
 index_blueprint = Blueprint('index', __name__)
@@ -79,9 +81,39 @@ def checkDex(dex_request):
 
 @index_blueprint.route("/", methods=['GET', 'POST'])
 def index():
-    resetCharacters()
     return redirect(url_for('index.dashboard'))
 
+#@index_blueprint.route('/api/data')
+#def data():
+#    url = 'https://api.open5e.com/monsters/?format=json&limit=50'
+ #   list = requests.get(url)
+ #   jsonList = list.json()
+ #   return {'data': [monster.to_dict() for monster in jsonList['results']]}
+
+@index_blueprint.route("/add_monster", methods=['GET', 'POST'])
+def add_monster():
+    if request.method == 'POST':
+        if 'back' in request.form:
+            return redirect(url_for('index.dashboard'))
+        elif 'save' in request.form:
+            party = Party.query.filter_by(active=True).first()
+            if not party:
+                activeParty = 0
+                flash("Please select a party first", 'error')
+            else:
+                activeParty = party.id
+                if Character.createPlayer(request.form, activeParty):
+                    flash("Character created", 'info')
+                else:
+                    flash("Character creation failed", 'error')
+                return redirect(url_for('index.dashboard'))
+    elif request.method == 'GET':
+        url = 'https://api.open5e.com/monsters/?format=json&limit=50'
+        monsters = requests.get(url)
+        x = monsters.json()
+        Monster.addMonsters(x)
+        monsterList = Monster.query.all()
+        return render_template("add_monster.html", content=monsterList)
 
 @index_blueprint.route("/add_character", methods=['GET', 'POST'])
 def add_character():
@@ -244,8 +276,9 @@ def dashboard():
         if 'monster' in request.form:
             updatePlayers(request.form)
             # add generic monster
-            Character.addMonster(activeParty, party.monster_count)
-            Party.addMonsterCount(activeParty)
+            return redirect(url_for('index.add_monster'))
+            #Character.addMonster(activeParty, party.monster_count)
+            #Party.addMonsterCount(activeParty)
         elif 'npc' in request.form:
             updatePlayers(request.form)
             # add generic npc

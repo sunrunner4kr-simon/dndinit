@@ -1,0 +1,139 @@
+{% extends "base.html" %} {% block title %}Init Tracker{% endblock %} {% block
+content %}
+<h1>Add Monster</h1>
+<form action="#" method="post">
+  <table class="table table-striped" id="data">
+    <thead>
+      <tr>
+        <th></th>
+        <th scope="col">Name</th>
+        <th scope="col">Type</th>
+        <th scope="col">CR</th>
+        <th scope="col">Size</th>
+        <th scope="col">Hit Points</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for monster in content %}
+      <tr data-child-value="hidden 1">
+        <td class="details-control"></td>
+        <td>{{ monster.name }}</td>
+        <td>{{ monster.type }}</td>
+        <td>{{ monster.challenge_rating }}</td>
+        <td>{{ monster.size }}</td>
+        <td>{{ monster.hit_points }}</td>
+        <td>{{ monster.alignment }}</td>
+        <td>{{ monster.armor_class }}</td>
+        <td>{{ monster.hit_dice }}</td>
+        <td>{{ monster.speed}}</td>
+        <td>{{ monster.strength }}</td>
+        <td>{{ monster.dexterity }}</td>
+        <td>{{ monster.constitution }}</td>
+        <td>{{ monster.intelligence }}</td>
+        <td>{{ monster.wisdom }}</td>
+        <td>{{ monster.charisma }}</td>
+        <td>{{ monster.strength_save }}</td>
+        <td>{{ monster.dexterity_save }}</td>
+        <td>{{ monster.constitution_save }}</td>
+        <td>{{ monster.intelligence_save }}</td>
+        <td>{{ monster.wisdom_save }}</td>
+        <td>{{ monster.charisma_save }}</td>
+        <td>{{ monster.skills }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</form>
+{% endblock %}
+{% block scripts %}
+  <script>
+
+    function abilityScore ( score ) {
+      return (score - 10) / 2
+    }
+
+    function returnSkills ( skills ) {
+      if (skills !== null) {
+        const myArr = JSON.parse(skills);
+        let result = "";
+        count = 0;
+        for (let i = 0; i < myArr.length; i++) {
+          if( count !== 1) {
+            result += ",";
+          }
+          result += myArr[i];
+        }
+        return result;
+      }
+    }
+
+    /* Formatting function for row details - modify as you need */
+    function format ( d ) {
+
+        // `d` is the original data object for the row
+        return "<div style+'font-family: Source Sans Pro,sans-serif;color: #111;'><h1>"+d.name+"</h1><p><em>"+d.size+" "+d.type+", "+d.alignment+"</em></p><hr ><p><b>Armor Class</b> "+
+          d.armor_class+"</p><p><b>Hit Points</b> "+d.hit_points+" ("+d.hit_dice+")</p><p><b>Speed</b> "+
+          d.speed+"</p><hr><div class='ability-array'><div class='ability-array'><div class='ability-block'><span class='ability-name'>STR</span> <span class='ability-score'>"+
+          d.strength+" (<span><span>+</span> <span>"+abilityScore(d.strength)+"</span></span>)</span></div> <div class='ability-block'><span class='ability-name'>DEX</span> <span class='ability-score'>"+
+          d.dexterity+" (<span><span>+</span> <span>"+abilityScore(d.dexterity)+"</span></span>)</span></div> <div class='ability-block'><span class='ability-name'>CON</span> <span class='ability-score'>"+
+          d.constitution+" (<span><span>+</span> <span>"+abilityScore(d.constitution)+"</span></span>)</span></div> <div class='ability-block'><span class='ability-name'>INT</span> <span class='ability-score'>"+
+          d.intelligence+" (<span><span>+</span> <span>"+abilityScore(d.intelligence)+"</span></span>)</span></div> <div class='ability-block'><span class='ability-name'>WIS</span> <span class='ability-score'>"+
+          d.wisdom+" (<span><span>+</span> <span>"+abilityScore(d.wisdom)+"</span></span>)</span></div> <div class='ability-block'><span class='ability-name'>CHA</span> <span class='ability-score'>"+
+          d.charisma+" (<span><span>+</span> <span>"+abilityScore(d.charisma)+"</span></span>)</span></div></div><hr></div><hr>"+
+          "<p><b>Saving Throws </b> Str + "+abilityScore(d.strength)+", Dex + "+abilityScore(d.dexterity)+", Con + "+abilityScore(d.constitution)+", Int + "+abilityScore(d.intelligence)+", Wis + "+abilityScore(d.wisdom)+", Cha + "+abilityScore(d.charisma)+"</p>"+
+          "<p><b>Skills </b>"+returnSkills(d.skills);
+    }
+
+    $(document).ready(function () {
+      var table = $('#data').DataTable({
+        columns: [
+          {
+                "className":      'dt-control',
+                "orderable":      false,
+                "data":           null,
+                "defaultContent": ''
+          },
+          {"data": "name"},
+          {"data": "type", searchable: true},
+          {"data": "challenge_rating", searchable: true},
+          {"data": "size", searchable: true},
+          {"data": "hit_points",searchable: false},
+          {"data": "alignment", visible: false},
+          {"data": "armor_class", visible: false},
+          {"data": "hit_dice", visible: false},
+          {"data": "speed", visible: false},
+          {"data": "strength", visible: false},
+          {"data": "dexterity", visible: false},
+          {"data": "constitution", visible: false},
+          {"data": "intelligence", visible: false},
+          {"data": "wisdom", visible: false},
+          {"data": "charisma", visible: false},
+          {"data": "strength_save", visible: false},
+          {"data": "dexterity_save", visible: false},
+          {"data": "constitution_save", visible: false},
+          {"data": "intelligence_save", visible: false},
+          {"data": "wisdom_save", visible: false},
+          {"data": "charisma_save", visible: false},
+          {"data": "skills", visible: false}
+        ],
+        });
+
+        // Add event listener for opening and closing details
+        $('#data').on('click', 'td.details-control', function () {
+            var tr = $(this).closest('tr');
+            var row = table.row( tr );
+    
+            if ( row.child.isShown() ) {
+                // This row is already open - close it
+                row.child.hide();
+                tr.removeClass('shown');
+            }
+            else {
+                // Open this row
+                row.child( format(row.data()) ).show();
+                tr.addClass('shown');
+            }
+        } );
+    });
+  </script>
+{% endblock %}
